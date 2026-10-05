@@ -361,7 +361,41 @@ The project will be following Waterfall with incremental development methodology
 
 \textless{}explanation here\textgreater{}
 
+\subsection{Algorithm}
+\begin{algorithm}[H]
+\caption{Elo Rating Update After a Completed Game}
+\label{alg:elo}
+\begin{algorithmic}[1]
+\Require Ratings $R_A$ and $R_B$ of players $A$ and $B$; number of completed rated games
+         $n_A$ and $n_B$ played by each player before this game; result $S_A \in \{1, 0.5, 0\}$
+         (win, draw, loss for $A$)
+\Ensure New ratings $R_A'$ and $R_B'$
 
+\Function{KFactor}{$n$}
+    \If{$n < 20$}
+        \State \Return $25$ \Comment{new player: rating adjusts quickly}
+    \ElsIf{$n < 70$}
+        \State \Return $15$ \Comment{developing player}
+    \Else
+        \State \Return $7$ \Comment{established player: rating is stable}
+    \EndIf
+\EndFunction
+
+\If{the game was played against the AI \textbf{or} the game was not completed}
+    \State \Return $R_A,\ R_B$ \Comment{rating unchanged}
+\EndIf
+\State $S_B \gets 1 - S_A$
+\State $E_A \gets \dfrac{1}{1 + 10^{(R_B - R_A)/400}}$ \Comment{expected score of $A$}
+\State $E_B \gets 1 - E_A$ \Comment{expected score of $B$}
+\State $K_A \gets \Call{KFactor}{n_A}$, \quad $K_B \gets \Call{KFactor}{n_B}$
+\State $R_A' \gets R_A + \text{round}\big(K_A\,(S_A - E_A)\big)$
+\State $R_B' \gets R_B + \text{round}\big(K_B\,(S_B - E_B)\big)$
+\State $n_A \gets n_A + 1$, \quad $n_B \gets n_B + 1$
+\State store $R_A'$, $R_B'$ and the updated game counts in the player records,
+       and add a rating-history entry for each player
+\State \Return $R_A',\ R_B'$
+\end{algorithmic}
+\end{algorithm}
 
 % ---------------- ERD ----------------
 

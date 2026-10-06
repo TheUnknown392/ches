@@ -80,7 +80,7 @@ To support competitive play, the system uses the Elo rating system. Every player
 \label{sec:problem}
 
 \begin{itemize}[leftmargin=1.5em]
-    \item Playing chess against another person normally requires both players to be in the same place or to use a large commercial online platform. Players who want to practice with others may be paired with opponents who are much stronger or much weaker than themselves, which makes games frustrating or unchallenging. Without a rating system, there is also no reliable way for players to measure their progress or compare their skill with others.
+  \item Standard Elo ratings change slowly, so a player whose rating does not match their real skill needs many games to be placed correctly. Because wins and losses move the rating very little, results carry little consequence and rated play feels less competitive.
 \end{itemize}
 
 
@@ -88,7 +88,9 @@ To support competitive play, the system uses the Elo rating system. Every player
 \label{sec:objectives}
 
 \begin{itemize}[leftmargin=1.5em]
-    \item To develop a multiplayer chess game using .NET and Raylib in which players can compete online against opponents of similar skill selected by an Elo-based matchmaking system, with all player, game, and rating data stored in a PostgreSQL database.
+  \item To implement a more punishing algorithm for ranking and matchmaking
+  \item To develop a multiplayer client-server chess game using .NET and Raylib in which players can compete online against opponents of similar skill selected by an Elo-based matchmaking system, with all player, game, and rating data stored in a PostgreSQL database.
+  \item To implement single player offline game for clients using machine learning
 \end{itemize}
 
 
@@ -96,7 +98,7 @@ To support competitive play, the system uses the Elo rating system. Every player
 \label{ch:methodology}
 \section{Development Model}
 
-The project will be following Waterfall with incremental development methodology for its simplicity, fast development time. It has advantage over agile where we do not need to wait for feedback from users. We can simply iterate over using waterfall model as a basis quick. This gives us advantage of waterfall while providing us with flexibility that we need.
+The project will be following Waterfall with incremental development methodology for its simplicity, fast development time. It has advantage over agile where we do not need to wait for feedback from users. While on initial development stage, We cannot find sufficient users for feedback. Instead of depending on user feedback for each development step, We can simply iterate over using waterfall model as a basis quick method. This gives us advantage of waterfall while providing us with flexibility that we need.
 
 \begin{figure}[H]
   \centering
@@ -149,7 +151,7 @@ Glickman extended the idea of rating players by adding a measure of uncertainty,
 
 Online chess platforms such as Lichess allow players from around the world to play against each other with automatic matchmaking and rating updates. Lichess is a free and open-source platform and demonstrates how a rating system, a game server, and a database can be combined to support large numbers of online players \cite{lichess}.
 
-The Lichess Open Database provides millions of recorded games, together with player ratings and results, that are released for free use \cite{lichessdb}. Such data makes it possible to train machine learning models that imitate human play. The Maia Chess project showed that neural networks trained on human games from a given rating range can predict human moves with good accuracy and can play in a more human-like way than traditional engines \cite{maia2020}. This project follows a similar approach on a smaller scale. The model is trained using the PyTorch library \cite{pytorch}, games are read using the python-chess library \cite{pythonchess}, and the trained model is exported in the ONNX format so that it can be executed inside a .NET application using ONNX Runtime \cite{onnxruntime}.
+The Lichess Open Database provides millions of recorded games, together with player ratings and results, that are released for free use. Such data makes it possible to train machine learning models that imitate human play. The Maia Chess project showed that neural networks trained on human games from a given rating range can predict human moves with good accuracy and can play in a more human-like way than traditional engines \cite{maia2020}. This project follows a similar approach on a smaller scale. The model is trained using the PyTorch library \cite{pytorch}, games are read using the python-chess library \cite{pythonchess}, and the trained model is exported in the ONNX format so that it can be executed inside a .NET application using ONNX Runtime \cite{onnxruntime}.
 
 For the technical implementation, Raylib is a simple library for video game programming that provides functions for windowing, drawing, input, and audio, and can be used from C\# through available bindings \cite{raylib}. PostgreSQL is an open-source relational database system known for its reliability and standards compliance \cite{postgresql}, and Npgsql is the data provider that allows .NET applications to communicate with PostgreSQL. The rules that the game must implement are defined in the Laws of Chess published by the International Chess Federation \cite{fide}.
 
@@ -180,7 +182,7 @@ The computer opponent is implemented as a neural network that predicts the next 
 \begin{itemize}[leftmargin=1.5em]
 \item\textbf{Data Collection and Preprocessing}
 
-Games are obtained from the Lichess Open Database in PGN format \cite{lichessdb}. Using the python-chess library \cite{pythonchess}, the games are filtered so that only standard games between players with high ratings (for example, above 1800) are kept. Each game is replayed move by move. Every position before a move is stored as an input, and the move chosen by the player is stored as the label. Each position is encoded as a set of some binary layers representing the pieces of each type and color, together with layers for castling rights and the en passant square, promotion, underpromotion. The board is oriented from the point of view of the player to move. Each move is encoded as a class index based on its start and end squares.
+Games are obtained from the Lichess Open Database in PGN format. Using the python-chess library \cite{pythonchess}, the games are filtered so that only standard games between players with high ratings (for example, above 1800) are kept. Each game is replayed move by move. Every position before a move is stored as an input, and the move chosen by the player is stored as the label. Each position is encoded as a set of some binary layers representing the pieces of each type and color, together with layers for castling rights and the en passant square, promotion, underpromotion. The board is oriented from the point of view of the player to move. Each move is encoded as a class index based on its start and end squares.
 
 \item\textbf{Model Training}
 
@@ -209,23 +211,23 @@ Before designing the system, the functional and non-functional requirements were
 \subsubsection{Functional Requirements}
 
 \begin{enumerate}[label=\Roman*.]
-    \item \textbf{User Registration and Login:} The system shall allow players to register and securely log in to the system.
+  \item \textbf{User Registration and Login:} The system shall allow players to register and securely log in to the system.
 
-    \item \textbf{Matchmaking:} The system shall allow a logged-in player to join a matchmaking queue and shall pair the player with an opponent of similar Elo rating.
+  \item \textbf{Matchmaking:} The system shall allow a logged-in player to join a matchmaking queue and shall pair the player with an opponent of similar Elo rating.
 
-    \item \textbf{Chess Gameplay:} The system shall allow two players to play a complete game of chess on a graphical board, with all moves validated according to the rules of chess.
+  \item \textbf{Chess Gameplay:} The system shall allow two players to play a complete game of chess on a graphical board, with all moves validated according to the rules of chess.
 
-    \item \textbf{Game Actions and Results:} The system shall support resigning, offering a draw, and detecting checkmate, stalemate, and other draw conditions to determine the result of a game.
+  \item \textbf{Game Actions and Results:} The system shall support resigning, offering a draw, and detecting checkmate, stalemate, and other draw conditions to determine the result of a game.
 
-    \item \textbf{Rating Update:} The system shall calculate and update the Elo rating of both players after each completed game between two human players.
+  \item \textbf{Rating Update:} The system shall calculate and update the Elo rating of both players after each completed game between two human players.
 
-    \item \textbf{Game and Rating History:} The system shall store completed games and the rating history of each player.
+  \item \textbf{Game and Rating History:} The system shall store completed games and the rating history of each player.
 
-    \item \textbf{Admin Management:} The administrator shall be able to manage players and review game records.
+  \item \textbf{Admin Management:} The administrator shall be able to manage players and review game records.
 
-    \item \textbf{Play Against AI:} The system shall allow a logged-in player to start a game against the computer opponent.
+  \item \textbf{Play Against AI:} The system shall allow a logged-in player to start a game against the computer opponent.
 
-    \item \textbf{AI Difficulty Selection:} The system shall allow the player to select the difficulty level of the AI before the game begins.
+  \item \textbf{AI Difficulty Selection:} The system shall allow the player to select the difficulty level of the AI before the game begins.
 \end{enumerate}
 
 \textbf{Use Case Diagram}
@@ -240,13 +242,13 @@ Before designing the system, the functional and non-functional requirements were
 \subsubsection{Non-Functional Requirements}
 
 \begin{enumerate}[label=\Roman*.]
-    \item \textbf{Performance:} The system shall transmit and display moves with minimal delay so that gameplay feels responsive. The AI shall choose its move within a few seconds on a standard personal computer.
+  \item \textbf{Performance:} The system shall transmit and display moves with minimal delay so that gameplay feels responsive. The AI shall choose its move within a few seconds on a standard personal computer.
 
-    \item \textbf{Usability:} The system shall provide a simple graphical interface for players to navigate.
+  \item \textbf{Usability:} The system shall provide a simple graphical interface for players to navigate.
 
-    \item \textbf{Security:} The system shall store passwords in hashed form, validate all moves on the server, and restrict administrative functions to authorized users.
+  \item \textbf{Security:} The system shall store passwords in hashed form, validate all moves on the server, and restrict administrative functions to authorized users.
 
-    \item \textbf{Integrity:} The system shall keep the game state consistent between both players and shall not lose completed game records.
+  \item \textbf{Integrity:} The system shall keep the game state consistent between both players and shall not lose completed game records.
 \end{enumerate}
 
 \section{Feasibility Study}
@@ -295,22 +297,22 @@ When a game ends, in either mode, the system determines the result (win, loss, o
 \textbf{Data Flow Diagrams}\\
 \begin{itemize}
   \item \textbf{Data Flow Diagram level 0}
-    \begin{figure}[H]
-      \centering
-      \includegraphics[width=15cm, keepaspectratio]{dfd-0.png}
-      \caption{Data Flow Diagram level 0}
-      \label{fig:dfd0}
-    \end{figure}
-    
-    \vspace{1cm}
-    
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=15cm, keepaspectratio]{dfd-0.png}
+    \caption{Data Flow Diagram level 0}
+    \label{fig:dfd0}
+  \end{figure}
+  
+  \vspace{1cm}
+  
   \item \textbf{Data Flow Diagram level 1}
-    \begin{figure}[H]
-      \centering
-      \includegraphics[width=15cm, keepaspectratio]{dfd-1.png}
-      \caption{Data Flow Diagram level 1}
-      \label{fig:dfd1}
-    \end{figure}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=15cm, keepaspectratio]{dfd-1.png}
+    \caption{Data Flow Diagram level 1}
+    \label{fig:dfd1}
+  \end{figure}
 \end{itemize}
 
 
@@ -322,44 +324,52 @@ When a game ends, in either mode, the system determines the result (win, loss, o
 \label{alg:elo}
 \begin{algorithmic}[1]
 \Require Ratings $R_A$ and $R_B$ of players $A$ and $B$; number of completed rated games
-         $n_A$ and $n_B$ played by each player before this game; result $S_A \in \{1, 0.5, 0\}$
-         (win, draw, loss for $A$)
+     $n_A$ and $n_B$ played by each player before this game; result $S_A \in \{1, 0.5, 0\}$
+     (win, draw, loss for $A$)
 \Ensure New ratings $R_A'$ and $R_B'$
 
 \Function{KFactor}{$n$}
-    \If{$n < 20$}
-        \State \Return $25$ \Comment{new player: rating adjusts quickly}
-    \ElsIf{$n < 70$}
-        \State \Return $15$ \Comment{developing player}
-    \Else
-        \State \Return $7$ \Comment{established player: rating is stable}
-    \EndIf
+  \If{$n < 20$}
+    \State \Return $25$ \Comment{new player: rating adjusts quickly}
+  \ElsIf{$n < 70$}
+    \State \Return $15$ \Comment{developing player}
+  \Else
+    \State \Return $7$ \Comment{established player: rating is stable}
+  \EndIf
+\EndFunction
+
+\Function{LossAdjust}{$K, S$}
+  \If{$S = 0$}
+    \State \Return $K + 5$ \Comment{loss: K is increased by 5}
+  \Else
+    \State \Return $K$ \Comment{win or draw: K unchanged}
+  \EndIf
 \EndFunction
 
 \If{the game was played against the AI \textbf{or} the game was not completed}
-    \State \Return $R_A,\ R_B$ \Comment{rating unchanged}
+  \State \Return $R_A,\ R_B$ \Comment{rating unchanged}
 \EndIf
 \State $S_B \gets 1 - S_A$
-\State $E_A \gets \dfrac{1}{1 + 10^{(R_B - R_A)/100}}$ \Comment{expected score of $A$}
+\State $E_A \gets \dfrac{1}{1 + 10^{(R_B - R_A)/200}}$ \Comment{expected score of $A$}
 \State $E_B \gets 1 - E_A$ \Comment{expected score of $B$}
 \State $K_A \gets \Call{KFactor}{n_A}$, \quad $K_B \gets \Call{KFactor}{n_B}$
+\State $K_A \gets \Call{LossAdjust}{K_A,\ S_A}$, \quad $K_B \gets \Call{LossAdjust}{K_B,\ S_B}$
 \State $R_A' \gets R_A + \text{round}\big(K_A\,(S_A - E_A)\big)$
 \State $R_B' \gets R_B + \text{round}\big(K_B\,(S_B - E_B)\big)$
 \State $n_A \gets n_A + 1$, \quad $n_B \gets n_B + 1$
 \State store $R_A'$, $R_B'$ and the updated game counts in the player records,
-       and add a rating-history entry for each player
+  and add a rating-history entry for each player
 \State \Return $R_A',\ R_B'$
 \end{algorithmic}
 \end{algorithm}
 
 In the above algorithm, we use a variable $K$-factor where
-$K_f \in \{20,15,7\}$. When the player is new, the $K$-factor is
+$K_f \in \{25,15,7\}$. When the player is new, the $K$-factor is
 higher so that their Elo change is larger than normal. After 20 games,
-it decreases to 15, and then to 7 after more than 70 games. This gives
-new players time to reach their natural Elo rating more quickly. The exact values of $K_f$-factor and the divisor mentioned below is expected to change as testing improves.
+it decreases to 15, and then to 7 after more or equal than 70 games. This gives
+new players time to reach their natural Elo rating more quickly. The exact values of $K_f$-factor and the divisor mentioned below is expected to change as testing improves. The algorithm punishes each user by decreasing more elo if a game was lost.
 
-The algorithm also uses lesser dividing value in the denominator of the original formula: $E_A = \dfrac{1}{1 + 10^{(R_B - R_A)/100}}$ instead of $E_A = \dfrac{1}{1 + 10^{(R_B - R_A)/400}}$ as lower value in dividor in denominator results in higher percent of punishment if lost by lower elo ranking player. and vice versa.
-
+The algorithm also uses a smaller divisor in the denominator of the original formula: $E_A = \dfrac{1}{1 + 10^{(R_B - R_A)/200}}$ instead of $E_A = \dfrac{1}{1 + 10^{(R_B - R_A)/400}}$. A smaller divisor makes the expected result depend more strongly on the rating difference. As a result, a higher-rated player loses more rating points when defeated by a lower-rated player, and a lower-rated player gains more rating points for an upset win. If time allows, the project may also record the measurement from standard elo as well as updated elo from this project so to measure seperation between casual and competitive player of each methods.
 
 \subsection{Entity Relationship Diagram}
 

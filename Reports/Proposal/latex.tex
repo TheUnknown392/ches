@@ -41,7 +41,7 @@ A PROJECT REPORT\par}
 {\fontsize{12}{15}\selectfont
 Submitted By\par
 
-\FIRSTNAME \space  \LASTNAME \space [TU Reg No: \TUID]\par
+\FIRSTNAME \space  \LASTNAME \space [Reg No: \TUID]\par
 October, 2026\par}
 
 \vfill
@@ -138,7 +138,7 @@ Computer opponent & None & Search-based engines, bots & Neural network with sele
 \label{tab:comparison}
 \end{table}
 
-The study shows that existing platforms already offer reliable play, but they are large and complex, and their setup cannot easily be reproduced or studied. The proposed system implements their core features at a smaller scale: rule enforcement, rated matchmaking, stored game history, and a computer opponent. It combines these in a single desktop application with a 2.5D interface and an AI that imitates human play.
+The study shows that existing platforms already offer reliable play, but they are large and complex, and their setup cannot easily be reproduced easily. The proposed system implements their core features at a smaller scale: rule enforcement, rated matchmaking, stored game history, and a computer opponent so that people wanting to study this kind of system can study more easily. It combines these in a single desktop application with a 2.5D interface and an AI that imitates human play.
 
 \subsection{Literature Review}
 \label{sec:lit}
@@ -180,7 +180,7 @@ The computer opponent is implemented as a neural network that predicts the next 
 \begin{itemize}[leftmargin=1.5em]
 \item\textbf{Data Collection and Preprocessing}
 
-Games are obtained from the Lichess Open Database in PGN format \cite{lichessdb}. Using the python-chess library \cite{pythonchess}, the games are filtered so that only standard games between players with high ratings (for example, above 1800) are kept. Each game is replayed move by move. Every position before a move is stored as an input, and the move chosen by the player is stored as the label. Each position is encoded as a set of some binary layers representing the pieces of each type and color, together with layers for castling rights and the en passant square, promotion, demotion. The board is oriented from the point of view of the player to move. Each move is encoded as a class index based on its start and end squares.
+Games are obtained from the Lichess Open Database in PGN format \cite{lichessdb}. Using the python-chess library \cite{pythonchess}, the games are filtered so that only standard games between players with high ratings (for example, above 1800) are kept. Each game is replayed move by move. Every position before a move is stored as an input, and the move chosen by the player is stored as the label. Each position is encoded as a set of some binary layers representing the pieces of each type and color, together with layers for castling rights and the en passant square, promotion, underpromotion. The board is oriented from the point of view of the player to move. Each move is encoded as a class index based on its start and end squares.
 
 \item\textbf{Model Training}
 
@@ -264,6 +264,7 @@ A feasibility study was carried out to determine whether the proposed Multiplaye
 \label{sec:HighLevelDesignofSystem}
 
 \subsection{Working Mechanism of The Proposed System}
+\textbf{Flow Chart of the Chess System}\\
 
 \begin{figure}[H]
   \centering
@@ -289,6 +290,29 @@ The player selects an AI difficulty, and the system creates an AI game. While th
 
 \textbf{Game completion}\\
 When a game ends, in either mode, the system determines the result (win, loss, or draw). It then checks whether the game was a rated human game. If so, the Elo ratings are calculated and the player ratings are updated. AI games and unrated games skip this step. In all cases the completed game is saved to the PostgreSQL database, the result is displayed, and the user returns to the main menu before the process stops.
+
+\newpage
+\textbf{Data Flow Diagrams}\\
+\begin{itemize}
+  \item \textbf{Data Flow Diagram level 0}
+    \begin{figure}[H]
+      \centering
+      \includegraphics[width=15cm, keepaspectratio]{dfd-0.png}
+      \caption{Data Flow Diagram level 0}
+      \label{fig:dfd0}
+    \end{figure}
+    
+    \vspace{1cm}
+    
+  \item \textbf{Data Flow Diagram level 1}
+    \begin{figure}[H]
+      \centering
+      \includegraphics[width=15cm, keepaspectratio]{dfd-1.png}
+      \caption{Data Flow Diagram level 1}
+      \label{fig:dfd1}
+    \end{figure}
+\end{itemize}
+
 
 
 \subsection{Description of Algorithm}
@@ -332,7 +356,7 @@ In the above algorithm, we use a variable $K$-factor where
 $K_f \in \{20,15,7\}$. When the player is new, the $K$-factor is
 higher so that their Elo change is larger than normal. After 20 games,
 it decreases to 15, and then to 7 after more than 70 games. This gives
-new players time to reach their natural Elo rating more quickly.
+new players time to reach their natural Elo rating more quickly. The exact values of $K_f$-factor and the divisor mentioned below is expected to change as testing improves.
 
 The algorithm also uses lesser dividing value in the denominator of the original formula: $E_A = \dfrac{1}{1 + 10^{(R_B - R_A)/100}}$ instead of $E_A = \dfrac{1}{1 + 10^{(R_B - R_A)/400}}$ as lower value in dividor in denominator results in higher percent of punishment if lost by lower elo ranking player. and vice versa.
 
@@ -375,7 +399,7 @@ The above figure describes the database of client devices. This ERD has extra at
 
 \begin{figure}[H]
   \centering
-  \includegraphics[height=7cm, keepaspectratio,angle=90,scale=0.5]{gantt-chart.png}
+  \includegraphics[height=17cm,width=35cm,angle=90,scale=0.5]{gantt-chart.png}
   \caption{Gantt Chart of Multiplayer Chess Game}
   \label{fig:gantt}
 \end{figure}

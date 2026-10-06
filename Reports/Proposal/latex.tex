@@ -1,36 +1,16 @@
 \input{settings.tex}
 
-% \figbox{width}{height}{outline} 
-% for real \includegraphics[width=0.8\textwidth,height=10cm,keepaspectratio]{image.png}
-\newcommand{\figbox}[3]{%
-  \fbox{\parbox[c][#2][c]{\dimexpr#1-2\fboxsep-2\fboxrule\relax}{%
-    \raggedright\footnotesize\singlespacing
-    \textbf{Diagram outline}\\[3pt]
-    #3}}%
-}
-
-%======================= DOCUMENT =======================
 \begin{document}
 
-
-%=====================================================================
-% COVER PAGE
-%=====================================================================
-
+%======================= COVER PAGE =======================
 \begin{titlepage}
 \centering
 \thispagestyle{empty}
 
-
-
 \includegraphics[height=4.6cm]{Tribhuvan-University-Logo.png}
-
-
 
 {\fontsize{16}{19}\selectfont\bfseries
 Tribhuvan University\par}
-
-
 
 {\fontsize{14}{17}\selectfont\bfseries
 Faculty of Humanities and Social Sciences\par}
@@ -40,7 +20,6 @@ Faculty of Humanities and Social Sciences\par}
 {\fontsize{14}{17}\selectfont\bfseries
 Ches: Online Chess Game Using .NET, Raylib and PostgreSQL\\
 with Difficulty based AI Player\par}
-
 
 \vspace{0.8cm}
 {\fontsize{13}{16}\selectfont\bfseries
@@ -69,41 +48,24 @@ October, 2026\par}
 
 \end{titlepage}
 
-
-%=====================================================================
-% page numbering
-%=====================================================================
-
+%======================= FRONT MATTER =======================
 \pagenumbering{roman}
 \setcounter{page}{1}
 \onehalfspacing
 
 
-\chapter*{ABSTRACT}
-\addcontentsline{toc}{chapter}{ABSTRACT}
-
-The Chess Game is a desktop application developed using C\# and the .NET platform, with Raylib used for 2.5D graphics and user interaction, and PostgreSQL used for persistent data storage. The system allows registered players to play complete games of chess either online against other players or against a computer opponent. For online play, a central game server validates every move according to the rules of chess, keeps the game state synchronized between both players, and records finished games in the database. To make games fair and competitive, the system uses an Elo-based rating system and an Elo-based matchmaking queue that pairs players of similar skill. After each online game, the ratings of both players are updated and stored together with the game history. The project also attempts to implement a computer opponent which is powered by a neural network trained on games from the Lichess open database and executed inside the game using ONNX Runtime. Its playing strength can be adjusted through several difficulty levels.
-
-\textbf{Keywords:} \textit{Chess, Multiplayer Game, 2.5D Graphics, Artificial Intelligence, Neural Network, ONNX, .NET, Raylib, PostgreSQL, Elo, Elo Rating, Matchmaking, Client-Server}
-
-\newpage
-\phantomsection
-\addcontentsline{toc}{chapter}{TABLE OF CONTENTS}
 \tableofcontents
 \newpage
-
 \listoffigures
 \newpage
+\listoftables
 
 \pagenumbering{arabic}
 \setcounter{page}{1}
 
+
 \chapter{INTRODUCTION}
 \label{ch:introduction}
-
-
-\section{Introduction}
-\label{sec:introduction}
 
 Chess is one of the oldest and most widely played strategy games in the world. With the growth of the internet, chess has moved from the physical board to online platforms where players can find opponents from anywhere at any time. A good online chess platform must do more than display a board. It must enforce the rules of the game correctly, keep both players synchronized in real time, store game records, and match players with opponents of similar strength so that games remain interesting and fair.
 
@@ -114,14 +76,15 @@ In addition to online multiplayer, the system includes a Player versus Environme
 To support competitive play, the system uses the Elo rating system. Every player has a numerical rating that changes after each completed online game depending on the result and the strength of the opponent. The matchmaking module uses these ratings to place players in a queue and pair them with opponents whose ratings are close to their own. The system also provides an administrative module for managing players and viewing game records. The main purpose of the project is to demonstrate how game development, networking, database management, a rating algorithm, and machine learning can be combined to build a complete chess game.
 
 
-\section{Problem Statement}
+\chapter{PROBLEM STATEMENT}
 \label{sec:problem}
+
 \begin{itemize}[leftmargin=1.5em]
     \item Playing chess against another person normally requires both players to be in the same place or to use a large commercial online platform. Players who want to practice with others may be paired with opponents who are much stronger or much weaker than themselves, which makes games frustrating or unchallenging. Without a rating system, there is also no reliable way for players to measure their progress or compare their skill with others.
 \end{itemize}
-    
 
-\section{Objective}
+
+\chapter{OBJECTIVES}
 \label{sec:objectives}
 
 \begin{itemize}[leftmargin=1.5em]
@@ -129,40 +92,19 @@ To support competitive play, the system uses the Elo rating system. Every player
 \end{itemize}
 
 
-\section{Scope and Limitation}
-\label{sec:scope}
-
-\subsection*{Scope}
-
-\begin{itemize}[leftmargin=1.5em]
-    \item Implementation of the standard rules of chess, including castling, en passant, pawn promotion, check, checkmate, stalemate, and draw conditions.
-    \item A 2.5D graphical desktop client built with Raylib, using a static camera, for displaying the board and playing moves.
-    \item Player registration and login with secure storage of credentials.
-    \item Online two-player games over a network using a central game server.
-    \item Elo-based rating calculation and Elo-based matchmaking queue.
-    \item Storage of players, games, moves, and rating history in PostgreSQL.
-    \item Viewing of player rating, game history, and leaderboard.
-    \item Admin controls for managing players and reviewing games.
-    \item A Player versus Environment (PvE) mode in which a player can play against the trained AI.
-    \item Selectable AI difficulty levels, obtained by adjusting how the AI chooses among the moves predicted by a single trained model.
-\end{itemize}
-
-\subsection*{Limitations}
-
-\begin{itemize}[leftmargin=1.5em]
-    \item The system is a desktop application and is not available as a web or mobile application.
-    \item The graphics are 2.5D with a static camera. The player cannot rotate, zoom, or move the camera
-    \item The system supports games between two human players and games between a human player and the AI
-    \item The AI is a neural network trained on a limited number of games and is expected to play at an amateur level. It does not use deep search and is not comparable in strength to professional chess engines such as Stockfish.
-    \item The system does not include advanced anti-cheating measures such as engine-assistance detection.
-    \item Features such as spectating, in-game chat, tournaments, and multiple time-control modes are not included.
-\end{itemize}
-
-
-\newpage
-
 \chapter{METHODOLOGY}
 \label{ch:methodology}
+\section{Development Model}
+
+The project will be following Waterfall with incremental development methodology for its simplicity, fast development time. It has advantage over agile where we do not need to wait for feedback from users. We can simply iterate over using waterfall model as a basis quick. This gives us advantage of waterfall while providing us with flexibility that we need.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=11cm,keepaspectratio]{waterfall.png}
+  \caption{Waterfall Model for Multiplayer Chess Game}
+  \label{fig:waterfall}
+\end{figure}
+
 
 \section{Requirement Identification}
 \label{sec:reqid}
@@ -170,13 +112,13 @@ To support competitive play, the system uses the Elo rating system. Every player
 \subsection{Study of Existing System}
 \label{sec:existing}
 
-Chess has long been played over the board under the rules maintained by the International Chess Federation (FIDE) \cite{fide}. The game has a long history and developed into its modern form in Europe in the fifteenth century \cite{murray1913history}. In traditional over-the-board chess, players must meet in the same place, find opponents of suitable strength by themselves, and record games by hand. Official ratings are issued by FIDE and national federations, and they are updated only after rated tournaments \cite{fiderating}. Because of this, the feedback a player receives is slow and depends on tournament access.
+Chess has long been played over the board under the rules maintained by the International Chess Federation (FIDE) \cite{fide}. The game has a long history and developed into its modern form in Europe in the fifteenth century. In traditional over-the-board chess, players must meet in the same place, find opponents of suitable strength by themselves, and record games by hand. Official ratings are issued by FIDE and national federations, and they are updated only after rated tournaments \cite{fide}. Because of this, the feedback a player receives is slow and depends on tournament access.
 
 Online platforms removed many of these limitations. Two of the most widely used are Chess.com and Lichess.
 
-\textbf{Chess.com} is a commercial platform that offers live and daily games, puzzles, lessons, and computer opponents with different playing personalities \cite{chesscom}. It uses a Glicko-based rating system \cite{chesscomrating,glickman1999parameter}, and a basic account is free, but many analysis and learning features require a paid subscription.
+\textbf{Chess.com} is a commercial platform that offers live and daily games, puzzles, lessons, and computer opponents with different playing personalities. It uses a Glicko-based rating system \cite{chesscomrating}, and a basic account is free, but many analysis and learning features require a paid subscription.
 
-\textbf{Lichess} is a free, non-profit, and open-source platform with no advertisements \cite{lichess,lila}. It pairs players through a rating-based matchmaking lobby and rates them using the Glicko-2 system \cite{glickman2001dynamic}. It also offers play against the Stockfish engine at several levels \cite{stockfish}, and it publishes all rated games in an open database \cite{lichessdb}.
+\textbf{Lichess} is a free, non-profit, and open-source platform with no advertisements \cite{lichess}\cite{lila}. It pairs players through a rating-based matchmaking lobby and rates them using the Glicko-2 system \cite{glickman2001dynamic}. It also offers play against the Stockfish engine at several levels \cite{stockfish}, and it publishes all rated games in an open database.
 
 Both platforms are large web-based services built for very large numbers of players. They are designed for web browsers and mobile applications, and their server software is complex. Chess.com's server code is not public. Lichess's code is public, but it is a large codebase that is hard to study in a short academic project. Their computer opponents are mostly based on search engines such as Stockfish, which calculate many moves ahead, rather than on models that imitate human move choices \cite{maia2020}.
 
@@ -187,7 +129,7 @@ Both platforms are large web-based services built for very large numbers of play
 \begin{tabular}{|p{2.9cm}|p{3.4cm}|p{3.4cm}|p{3.4cm}|}
 \hline
 \textbf{Feature} & \textbf{Traditional (OTB)} & \textbf{Chess.com / Lichess} & \textbf{Proposed System} \\ \hline
-Platform & Physical board & Web and mobile & Desktop (.NET, Raylib) \\ \hline
+Platform & Physical board & Web and mobile & Desktop \\ \hline
 Finding opponents & Arranged manually or via tournaments & Automatic matchmaking & Elo-based matchmaking queue \\ \hline
 Rating system & Elo (FIDE), updated per tournament & Glicko / Glicko-2, updated per game & Elo, updated per game \\ \hline
 Computer opponent & None & Search-based engines, bots & Neural network with selectable difficulty \\ \hline
@@ -199,20 +141,18 @@ Computer opponent & None & Search-based engines, bots & Neural network with sele
 The study shows that existing platforms already offer reliable play, but they are large and complex, and their setup cannot easily be reproduced or studied. The proposed system implements their core features at a smaller scale: rule enforcement, rated matchmaking, stored game history, and a computer opponent. It combines these in a single desktop application with a 2.5D interface and an AI that imitates human play.
 
 \subsection{Literature Review}
+\label{sec:lit}
+
 Arpad Elo introduced a statistical method for rating chess players in which each player has a numerical rating and the expected result of a game is calculated from the rating difference between the two players. After a game, ratings are adjusted according to the difference between the actual result and the expected result. This method became the basis of the rating systems used in chess and in many other competitive games \cite{elo1978rating}.
 
-Glickman extended the idea of rating players by adding a measure of uncertainty, called the rating deviation, to each rating. Players who have played few games or have not played for a long time have a less reliable rating, and their ratings change more quickly. This improvement is used in the Glicko family of rating systems \cite{glickman1999parameter}.
-
-Herbrich, Minka and Graepel proposed TrueSkill, a Bayesian skill rating system designed for online games. In addition to estimating player skill, it uses the uncertainty of each estimate to support matchmaking, so that players can be paired in games that are balanced and competitive \cite{herbrich2006trueskill}.
+Glickman extended the idea of rating players by adding a measure of uncertainty, called the rating deviation, to each rating. Players who have played few games or have not played for a long time have a less reliable rating, and their ratings change more quickly. This improvement is used in the Glicko family of rating systems.
 
 Online chess platforms such as Lichess allow players from around the world to play against each other with automatic matchmaking and rating updates. Lichess is a free and open-source platform and demonstrates how a rating system, a game server, and a database can be combined to support large numbers of online players \cite{lichess}.
 
 The Lichess Open Database provides millions of recorded games, together with player ratings and results, that are released for free use \cite{lichessdb}. Such data makes it possible to train machine learning models that imitate human play. The Maia Chess project showed that neural networks trained on human games from a given rating range can predict human moves with good accuracy and can play in a more human-like way than traditional engines \cite{maia2020}. This project follows a similar approach on a smaller scale. The model is trained using the PyTorch library \cite{pytorch}, games are read using the python-chess library \cite{pythonchess}, and the trained model is exported in the ONNX format so that it can be executed inside a .NET application using ONNX Runtime \cite{onnxruntime}.
 
-For the technical implementation, Raylib is a simple library for video game programming that provides functions for windowing, drawing, input, and audio, and can be used from C\# through available bindings \cite{raylib}. PostgreSQL is an open-source relational database system known for its reliability and standards compliance \cite{postgresql}, and Npgsql is the data provider that allows .NET applications to communicate with PostgreSQL \cite{npgsql}. The rules that the game must implement are defined in the Laws of Chess published by the International Chess Federa
-tion \cite{fide}.
+For the technical implementation, Raylib is a simple library for video game programming that provides functions for windowing, drawing, input, and audio, and can be used from C\# through available bindings \cite{raylib}. PostgreSQL is an open-source relational database system known for its reliability and standards compliance \cite{postgresql}, and Npgsql is the data provider that allows .NET applications to communicate with PostgreSQL. The rules that the game must implement are defined in the Laws of Chess published by the International Chess Federation \cite{fide}.
 
-\label{sec:lit}
 \subsubsection{Elo Rating and Matchmaking}
 \label{sec:elo}
 
@@ -232,25 +172,25 @@ where $S_A$ is the actual score of player A (1 for a win, 0.5 for a draw, and 0 
 
 For matchmaking, a player who joins the queue is stored with the current rating and the time of joining. The server searches the queue for another player whose rating lies within an allowed range of the player's own rating. If no suitable opponent is found, the allowed range is gradually widened as the waiting time increases, so that players are not left waiting for too long. When a match is found, both players are removed from the queue, the colors are assigned, and a new game session is created.
 
-
 \subsubsection{AI Opponent}
 \label{sec:ai}
 
 The computer opponent is implemented as a neural network that predicts the next move from a given board position. The development of the AI consists of the following stages.
+
 \begin{itemize}[leftmargin=1.5em]
-\item{Data Collection and Preprocessing}
+\item\textbf{Data Collection and Preprocessing}
 
-Games are obtained from the Lichess Open Database in PGN format \cite{lichessdb}. Using the python-chess library \cite{pythonchess}, the games are filtered so that only standard games between players with high ratings (for example, above 1800) are kept. Each game is replayed move by move. Every position before a move is stored as an input, and the move chosen by the player is stored as the label. Each position is encoded as a set of $8 \times 8$ binary layers representing the pieces of each type and color, together with layers for castling rights and the en passant square. The board is oriented from the point of view of the player to move. Each move is encoded as a class index based on its start and end squares.
+Games are obtained from the Lichess Open Database in PGN format \cite{lichessdb}. Using the python-chess library \cite{pythonchess}, the games are filtered so that only standard games between players with high ratings (for example, above 1800) are kept. Each game is replayed move by move. Every position before a move is stored as an input, and the move chosen by the player is stored as the label. Each position is encoded as a set of some binary layers representing the pieces of each type and color, together with layers for castling rights and the en passant square, promotion, demotion. The board is oriented from the point of view of the player to move. Each move is encoded as a class index based on its start and end squares.
 
-\item{Model Training}
+\item\textbf{Model Training}
 
 A convolutional neural network is trained using PyTorch \cite{pytorch} to predict the played move from the encoded position. The data is divided into training and validation sets, and the model is evaluated using the accuracy of its move predictions on positions it has not seen before. Training is performed on a cloud GPU, and the trained model is exported to the ONNX format.
 
-\item{Integration into the Game}
+\item\textbf{Integration into the Game}
 
 The game client loads the ONNX model using ONNX Runtime \cite{onnxruntime}. When it is the AI's turn, the rules engine provides the current position, which is encoded in exactly the same way as in training. The model outputs a score for each possible move. Scores of illegal moves are removed using the legal moves generated by the rules engine, so the AI can never make an illegal move.
 
-\item{Difficulty Levels}
+\item\textbf{Difficulty Levels}
 
 Difficulty is controlled without training separate models. The model's scores for the legal moves are converted into probabilities using a temperature value $T$:
 
@@ -261,12 +201,10 @@ P(m_i) = \frac{e^{z_i / T}}{\sum_j e^{z_j / T}}
 where $z_i$ is the model's score for legal move $m_i$. A low temperature makes the AI almost always select its best move, while a high temperature makes it select weaker moves more often. In addition, each difficulty level has a small probability of playing a random legal move to imitate human blunders. The combination of temperature and blunder probability defines the difficulty levels (for example, Easy, Medium, Hard, and Expert).
 \end{itemize}
 
-
 \subsection{Requirement Analysis}
 \label{sec:reqanalysis}
 
 Before designing the system, the functional and non-functional requirements were identified through a review of similar systems and an analysis of user needs.
-
 
 \subsubsection{Functional Requirements}
 
@@ -278,10 +216,10 @@ Before designing the system, the functional and non-functional requirements were
     \item \textbf{Chess Gameplay:} The system shall allow two players to play a complete game of chess on a graphical board, with all moves validated according to the rules of chess.
 
     \item \textbf{Game Actions and Results:} The system shall support resigning, offering a draw, and detecting checkmate, stalemate, and other draw conditions to determine the result of a game.
-u
+
     \item \textbf{Rating Update:} The system shall calculate and update the Elo rating of both players after each completed game between two human players.
 
-    \item \textbf{Game and Rating History:} The system shall store completed games
+    \item \textbf{Game and Rating History:} The system shall store completed games and the rating history of each player.
 
     \item \textbf{Admin Management:} The administrator shall be able to manage players and review game records.
 
@@ -290,22 +228,14 @@ u
     \item \textbf{AI Difficulty Selection:} The system shall allow the player to select the difficulty level of the AI before the game begins.
 \end{enumerate}
 
+\textbf{Use Case Diagram}
 
-
-\begin{itemize}[leftmargin=1.5em]
-\item{Use Case Diagram}
-\leavevmode\nopagebreak
-\begin{center}
-
-\figbox{0.72\textwidth}{11.5cm}{}
-
-\captionof{figure}{Use Case Diagram of Multiplayer Chess Game}
-\label{fig:usecase}
-
-\end{center}
-\end{itemize}
-\textless{}explanation here\textgreater{}
-
+\begin{figure}[H]
+  \centering
+  \includegraphics[height=10cm,keepaspectratio]{chess-use-case-diagram.png}
+  \caption{Use Case Diagram of Multiplayer Chess Game}
+  \label{fig:usecase}
+\end{figure}
 
 \subsubsection{Non-Functional Requirements}
 
@@ -319,49 +249,50 @@ u
     \item \textbf{Integrity:} The system shall keep the game state consistent between both players and shall not lose completed game records.
 \end{enumerate}
 
-
 \section{Feasibility Study}
 \label{sec:feasibility}
 
 A feasibility study was carried out to determine whether the proposed Multiplayer Chess Game is practical, achievable, and suitable for implementation within the available resources. The feasibility of the system was examined from the following perspectives:
 
-
- \subsection{Technical Feasibility:} The proposed system is technically feasible because it can be developed using the .NET platform and the C\# language, together with the open-source Raylib library for graphics and PostgreSQL for data storage. Network communication between the client and server can be implemented using standard socket support available in .NET. The system does not require expensive hardware, and a standard personal computer is sufficient for development and testing. The AI component is also technically feasible. Chess data is freely available from the Lichess Open Database, model training can be done in Python using free cloud GPU services such as Google Colab, and the trained model can be run in .NET through the ONNX Runtime package without requiring special hardware.
+\subsection{Technical Feasibility:} The proposed system is technically feasible because it can be developed using the .NET platform and the C\# language, together with the open-source Raylib library for graphics and PostgreSQL for data storage. Network communication between the client and server can be implemented using standard socket support available in .NET. The system does not require expensive hardware, and a standard personal computer is sufficient for development and testing. The AI component is also technically feasible. Chess data is freely available from the Lichess Open Database, model training can be done in Python using free cloud GPU services such as Google Colab, and the trained model can be run in .NET through the ONNX Runtime package without requiring special hardware.
 
 \subsection{Economic Feasibility:} The system is economically feasible because it can be developed using free and open-source software and tools. .NET, Raylib, PostgreSQL, and the required development tools are available without licensing costs, which keeps the overall development cost low and suitable for an academic project.
 
 \subsection{Operational Feasibility:} The system is operationally feasible because the game is simple to use and follows familiar chess conventions. Players can register, log in, join the queue or start a game against the AI, and play with minimal instruction, and the administrator can manage players and game records through simple functions.
 
-
 \section{High Level Design of System}
-\label{sec:High Level Design of System}
+\label{sec:HighLevelDesignofSystem}
+
+\subsection{Working Mechanism of The Proposed System}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=15cm,height=19cm]{flowchart.png}
+  \caption{Flow chart of Ches}
+  \label{fig:flowchart}
+\end{figure}
 
 
+Figure~\ref{fig:flowchart} shows the overall workflow of the chess application, from launching the client to saving a completed game.
 
-\subsection{Methodology}
-The project will be following Waterfall with incremental development methodology for its simplicity, fast development time. It has advantage over agile where we do not need to wait for feedback from users. We can simply iterate over using waterfall model as a basis quick. This gives us advantage of waterfall while providing us with flexibility that we need.
+\textbf{Authentication}\\
+The process begins when the user launches the chess client and logs in or registers. The system checks the credentials. If authentication fails, a login error is displayed and the process stops. If it succeeds, the main menu is displayed.
 
-\leavevmode\nopagebreak
-\begin{center}
-\includegraphics[width=15cm,keepaspectratio]{waterfall.png}
+\textbf{Game mode selection}\\
+From the main menu, the user chooses between two modes: Online Multiplayer and Play Against AI.
 
-\captionof{figure}{Waterfall Model for Multiplayer Chess Game}
-\label{fig:waterfall}
+\textbf{Online multiplayer}\\
+The player joins the matchmaking queue and waits for a suitable opponent. Once one is found, the game server creates the game, assigns colors to the players, and synchronizes the initial game state.
 
-\end{center}
+\textbf{Play against AI}\\
+The player selects an AI difficulty, and the system creates an AI game. While the game is active, the human player makes a move, which is validated. An illegal move is rejected and the player tries again. A legal move is applied, and the system checks whether the game is over. If not, the AI takes its turn.
 
-\subsection{Flow Chart}
-\leavevmode\nopagebreak
-\begin{center}
-\includegraphics[height=20cm,keepaspectratio]{flowchart.png}
-\captionof{figure}{Flow chart of Ches}
-\label{fig:flowchart}
+\textbf{Game completion}\\
+When a game ends, in either mode, the system determines the result (win, loss, or draw). It then checks whether the game was a rated human game. If so, the Elo ratings are calculated and the player ratings are updated. AI games and unrated games skip this step. In all cases the completed game is saved to the PostgreSQL database, the result is displayed, and the user returns to the main menu before the process stops.
 
-\end{center}
 
-\textless{}explanation here\textgreater{}
+\subsection{Description of Algorithm}
 
-\subsection{Algorithm}
 \begin{algorithm}[H]
 \caption{Elo Rating Update After a Completed Game}
 \label{alg:elo}
@@ -385,7 +316,7 @@ The project will be following Waterfall with incremental development methodology
     \State \Return $R_A,\ R_B$ \Comment{rating unchanged}
 \EndIf
 \State $S_B \gets 1 - S_A$
-\State $E_A \gets \dfrac{1}{1 + 10^{(R_B - R_A)/400}}$ \Comment{expected score of $A$}
+\State $E_A \gets \dfrac{1}{1 + 10^{(R_B - R_A)/100}}$ \Comment{expected score of $A$}
 \State $E_B \gets 1 - E_A$ \Comment{expected score of $B$}
 \State $K_A \gets \Call{KFactor}{n_A}$, \quad $K_B \gets \Call{KFactor}{n_B}$
 \State $R_A' \gets R_A + \text{round}\big(K_A\,(S_A - E_A)\big)$
@@ -397,44 +328,58 @@ The project will be following Waterfall with incremental development methodology
 \end{algorithmic}
 \end{algorithm}
 
-% ---------------- ERD ----------------
+In the above algorithm, we use a variable $K$-factor where
+$K_f \in \{20,15,7\}$. When the player is new, the $K$-factor is
+higher so that their Elo change is larger than normal. After 20 games,
+it decreases to 15, and then to 7 after more than 70 games. This gives
+new players time to reach their natural Elo rating more quickly.
+
+The algorithm also uses lesser dividing value in the denominator of the original formula: $E_A = \dfrac{1}{1 + 10^{(R_B - R_A)/100}}$ instead of $E_A = \dfrac{1}{1 + 10^{(R_B - R_A)/400}}$ as lower value in dividor in denominator results in higher percent of punishment if lost by lower elo ranking player. and vice versa.
+
 
 \subsection{Entity Relationship Diagram}
 
-\newpage
-\leavevmode\nopagebreak
-\begin{center}
+\begin{figure}[H]
+  \centering
+  \includegraphics[height=15cm,width=15cm]{server-erd.png}
+  \caption{Entity Relationship Diagram of Server}
+  \label{fig:servererd}
+\end{figure}
 
-\figbox{\textwidth}{12cm}{}
+According to above figure, folowing entities are explained in points with their relationships with other entities.
 
-\captionof{figure}{Entity Relationship Diagram of Multiplayer Chess Game}
-\label{fig:erd}
+\textbf{Users}\\
+The User entity contains username, email, hashed password, elo etc. It contains all the data necessary to uniquely identify a user. Users plays agains other users. the players they have played against are stored on has\_encountered table. User is also related with rating history where each user's rating history is stored in the table.
 
-\end{center}
+\textbf{Has\_Encountered}\\
+The entity contains keys of two user ids. They are composit primary key which has details like last winner, total games played, total draws, user\_1 wins, user\_2 wins and so on. This is usefull for maintaning statistical data of each user's opponent without having to recalculate them again. Has Encountered is related to game entity.
 
-\textless{}explanation here\textgreater{}
+\textbf{Game}\\
+This entity has gets the uidA and uidB from has\_Encountered then stores all the game movement data, start date, end date, termination, result, white\_uid and so on for game statistical history.
 
-% ---------------- GANTT CHART ----------------
-
-\subsection{Gantt Chart}
-
-\newpage
-\leavevmode\nopagebreak
-\begin{center}
-
-\figbox{0.95\textwidth}{10cm}{}
-
-\captionof{figure}{Gantt Chart of Multiplayer Chess Game}
-\label{fig:gantt}
-
-\end{center}
-
-\textless{}explanation here\textgreater{}
+\textbf{Rating\_History}\\
+Rating history tracks the changes of user rating with each games and its date.
 
 
-%=====================================================================
-% CHAPTER 3 -- EXPECTED OUTCOMES
-%=====================================================================
+\begin{figure}[H]
+  \centering
+  \includegraphics[height=15cm,width=15cm]{client-erd.png}
+  \caption{Entity Relationship Diagram of Multiplayer Chess Game}
+  \label{fig:client-erd}
+\end{figure}
+
+The above figure describes the database of client devices. This ERD has extra attributes for User and less attribute for Rating\_History. User entity need is\_bots to distinguish between bot and another to describe difficulty if they are a bot. Rating\_History does not need uid as it is going to be same for logged in user.
+
+
+\chapter{GANTT CHART}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[height=7cm, keepaspectratio,angle=90,scale=0.5]{gantt-chart.png}
+  \caption{Gantt Chart of Multiplayer Chess Game}
+  \label{fig:gantt}
+\end{figure}
+
 
 \newpage
 
@@ -455,14 +400,18 @@ The project will be following Waterfall with incremental development methodology
   \item An administrative panel that enables management of players and game records.
 \end{itemize}
 
+\textbf{Expected UI}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=15cm,keepaspectratio]{expected-outcome.jpg}
+  \caption{Expected UI of Ches}
+  \label{fig:ui}
+\end{figure}
 
-%=====================================================================
-% REFERENCES
-%=====================================================================
 
 \newpage
 
-\chapter*{REFERENCES}
+\chapter{REFERENCES AND BIBLIOGRAPHY}
 \label{ch:references}
 
 \bibliographystyle{IEEEtran}
@@ -471,10 +420,5 @@ The project will be following Waterfall with incremental development methodology
 \renewcommand{\chapter}[1]{}
 \bibliography{references}
 \endgroup
-
-
-%=====================================================================
-% END OF DOCUMENT
-%=====================================================================
 
 \end{document}

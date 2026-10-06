@@ -9,6 +9,9 @@
     $ches> gcc ./nob.c -o nob
     $ches> ./nob
 ```
+## Resources used
+- [onlinegantt.com](https://www.onlinegantt.com/#/gantt) for Gantt Chart
+- [draw.io](draw.io) for Diagrams
 
 ---
 

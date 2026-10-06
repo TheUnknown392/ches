@@ -1,42 +1,40 @@
 \documentclass[12pt,a4paper]{report}
 
 \input{var.tex}
+
 %======================= PACKAGES =======================
-\usepackage{fontspec}              % real system fonts (needs XeLaTeX or LuaLaTeX) remove if using overleaf
+\usepackage{fontspec}              % requires XeLaTeX or LuaLaTeX
 \usepackage[top=1in,bottom=1in,left=1.25in,right=1in]{geometry}
-\usepackage{tocloft}               % custom ToC / LoF styles
-\usepackage{setspace}              % line spacing
-\usepackage{titlesec}              % custom heading styles
-\usepackage{graphicx}              % for including external images
+\usepackage{tocloft}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{graphicx}
 \usepackage{caption}
-\usepackage{float}                 % supports [H]
+\usepackage{float}
 \usepackage{fancyhdr}
 \usepackage{enumitem}
-\usepackage{chngcntr}              % continuous figure numbering
-\usepackage[table]{xcolor}         % cell coloring
+\usepackage{chngcntr}
+\usepackage[table]{xcolor}
 \usepackage[hidelinks]{hyperref}
 \usepackage{amsmath}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 
-
-\graphicspath{{../images}} % my images
+\graphicspath{{../images}}
 
 %======================= FONT =======================
-% Compile with XeLaTeX, Overleaf doesn't work sadly so it is what it is.
-% You have to look "times" there
-% Real Times New Roman  must be installed on the computer
 \setmainfont{Times New Roman}
 
-%======================= FIGURE NUMBERING =======================
+%======================= FIGURE / TABLE NUMBERING =======================
 \counterwithout{figure}{chapter}
 \counterwithout{table}{chapter}
+\numberwithin{figure}{chapter}
+\numberwithin{table}{chapter}
 
 %======================= CAPTION STYLE =======================
 \DeclareCaptionFont{twelvept}{\fontsize{12}{14}\selectfont}
-\numberwithin{figure}{chapter}
 
-% Figure captions: centered, bold, 12pt, BELOW the figure
+% Figure and table captions: centered, bold, 12pt, below
 \captionsetup[figure]{
   font={bf,twelvept},
   labelfont=bf,
@@ -47,7 +45,6 @@
   skip=8pt
 }
 
-% Table captions: centered, bold, 12pt, BELOW the table
 \captionsetup[table]{
   font={bf,twelvept},
   labelfont=bf,
@@ -59,81 +56,65 @@
 }
 
 %======================= HEADING STYLES =======================
-% Chapter heading:
-% CHAPTER 1: INTRODUCTION
 \titleformat{\chapter}[block]
   {\normalfont\bfseries\setstretch{1}\fontsize{16}{19}\selectfont\centering}
-  {CHAPTER \thechapter:}
+  {}
   {0.5em}
   {}
-
-
 \titlespacing*{\chapter}{0pt}{-16pt}{0pt}
 
-% Section heading: 14pt, bold
 \titleformat{\section}
   {\normalfont\bfseries\fontsize{14}{17}\selectfont}
   {\thesection}{10pt}{}
-
 \titlespacing*{\section}{0pt}{18pt}{10pt}
 
-% Subsection heading: 12pt, bold
 \titleformat{\subsection}
   {\normalfont\bfseries\fontsize{12}{15}\selectfont}
   {\thesubsection}{10pt}{}
-
 \titlespacing*{\subsection}{0pt}{14pt}{8pt}
 
-%======================= TOC / LOF STYLE =======================
-% Chapter-level (root) entries bold
+%======================= TOC =======================
 \renewcommand{\cftchapfont}{\bfseries}
 \renewcommand{\cftchappagefont}{\bfseries}
-
 \renewcommand{\cftchapdotsep}{\cftdotsep}
 \renewcommand{\cftchapaftersnum}{.}
 \renewcommand{\cftsecaftersnum}{}
 \renewcommand{\cftsubsecaftersnum}{}
 
-% Sections and subsections normal weight
 \renewcommand{\cftsecfont}{\normalfont}
 \renewcommand{\cftsecpagefont}{\normalfont}
 \renewcommand{\cftsubsecfont}{\normalfont}
 \renewcommand{\cftsubsecpagefont}{\normalfont}
 
-% Remove extra space above Table of Contents
-\setlength{\cftbeforetoctitleskip}{-12.5pt}
-
-% TABLE OF CONTENTS heading
+\setlength{\cftbeforetoctitleskip}{-16pt}
 \renewcommand{\contentsname}{TABLE OF CONTENTS}
 \renewcommand{\cfttoctitlefont}
-  {\bfseries\setstretch{1}\fontsize{16}{19}\selectfont\hfill}
+  {\hfill\bfseries\setstretch{1}\fontsize{16}{19}\selectfont}
 \renewcommand{\cftaftertoctitle}{\hfill}
 
-% LIST OF FIGURES heading
+%======================= LIST OF FIGURES / TABLES =======================
+% Titles: centered, same style as the TOC title
 \renewcommand{\cftloftitlefont}
-  {\bfseries\fontsize{16}{19}\selectfont\hfill}
+  {\hfill\bfseries\setstretch{1}\fontsize{16}{19}\selectfont}
 \renewcommand{\cftafterloftitle}{\hfill}
 
-% List of Figures entries: Figure 1, Figure 2, ... (bold)
+\renewcommand{\cftlottitlefont}
+  {\hfill\bfseries\setstretch{1}\fontsize{16}{19}\selectfont}
+\renewcommand{\cftafterlottitle}{\hfill}
+
 \renewcommand{\cftfigpresnum}{Figure }
 \renewcommand{\cftfigaftersnum}{}
 \setlength{\cftfignumwidth}{6.2em}
-\renewcommand{\cftfigfont}{\bfseries}
-\renewcommand{\cftfigpagefont}{\bfseries}
+\renewcommand{\cftfigfont}{\normalfont}
+\renewcommand{\cftfigpagefont}{\normalfont}
 
-% Custom \listoffigures
-% Wrapped in \AtBeginDocument because tocloft redefines \listoffigures
-% at the start of the document and would otherwise override this.
-\makeatletter
-\AtBeginDocument{%
-  \renewcommand{\listoffigures}{%
-    \chapter*{\textbf{LIST OF FIGURES}}%
-    \addcontentsline{toc}{chapter}{LIST OF FIGURES}%
-    \vspace{-15pt}%
-    \@starttoc{lof}%
-  }%
-}
-\makeatother
+\renewcommand{\cfttabpresnum}{Table }
+\renewcommand{\cfttabaftersnum}{}
+\setlength{\cfttabnumwidth}{6.2em}
+\renewcommand{\cfttabfont}{\normalfont}
+\renewcommand{\cfttabpagefont}{\normalfont}
+\setlength{\cftbeforeloftitleskip}{-16pt}
+\setlength{\cftbeforelottitleskip}{-16pt}
 
 %======================= PAGE NUMBERING =======================
 \pagestyle{fancy}
@@ -149,11 +130,18 @@
 
 %======================= MISC =======================
 \setlength{\parindent}{0pt}
-
-% Paragraph spacing: gap between paragraphs.
 \setlength{\parskip}{1\baselineskip}
 
-%======================= LINE SPACING =======================
-% 1.5 line spacing for the whole document.
-%\onehalfspacing
-   
+%======================= FLOAT SPACING =======================
+\setlength{\intextsep}{6pt plus 2pt minus 2pt}      % above/below [H] floats
+\setlength{\floatsep}{8pt plus 2pt minus 2pt}
+\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
+
+% No paragraph or list spacing inside figure/table/algorithm environments
+\makeatletter
+\g@addto@macro\@floatboxreset{%
+  \setlength{\parskip}{0pt}%
+  \setlength{\topsep}{0pt}%
+  \setlength{\partopsep}{0pt}%
+}
+\makeatother

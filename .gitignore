@@ -2,3 +2,17 @@ var.tex
 nob
 nob.old
 build
+
+[Bb]in/
+
+[Log]s/
+Ches/[Oo]bj/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+
+
+*raylib_log.txt
+*.log

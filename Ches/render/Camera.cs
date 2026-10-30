@@ -3,7 +3,7 @@ using System.Numerics;
 namespace render{
     public class Camera{
         private Camera3D camera;
-        private Vector3 camera_distance = new Vector3(0f, 5f, 4.2f);
+        private Vector3 camera_distance = new Vector3(0f, 6f, 2.5f);
         // change this string to enum?
         private Dictionary<string, Camera3D> views = new Dictionary<string, Camera3D>();
         public Camera(){

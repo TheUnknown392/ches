@@ -12,7 +12,7 @@ Ches/[Oo]bj/
 *.userosscache
 *.sln.docstates
 
-
+tags
 
 *raylib_log.txt
 *.log

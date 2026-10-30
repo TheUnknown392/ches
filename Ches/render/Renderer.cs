@@ -167,7 +167,7 @@ namespace render
         {
             DrawPiece(piece_kind, color, new Vector2(x, y));
         }
-        
+        // todo: change so it's easier to add some kind of animation.
         public void DrawBoardPieces(){
             for (int x = 0; x < 8; x++){
                 for (int y = 0; y < 8; y++){

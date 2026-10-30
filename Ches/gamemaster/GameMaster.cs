@@ -81,16 +81,16 @@ namespace gamemaster
                 BoardStatus[2 - 1, col].kind = our.pawn.kind;
                 BoardStatus[2 - 1, col].color = our.pawn.color;
 
-                BoardStatus[8 - 1, col].kind = opponent.pawn.kind;
-                BoardStatus[8 - 1, col].color = opponent.pawn.color;
+                BoardStatus[7 - 1, col].kind = opponent.pawn.kind;
+                BoardStatus[7 - 1, col].color = opponent.pawn.color;
             }
             for (int i = 0; i < 8; i++){
 
                 BoardStatus[1 - 1, i].color = our.pawn.color;
-                BoardStatus[7 - 1, i].color = opponent.pawn.color;
+                BoardStatus[8 - 1, i].color = opponent.pawn.color;
 
                 BoardStatus[1 - 1, i].kind = DEFAULT_PIECES[i];
-                BoardStatus[7 - 1, i].kind = DEFAULT_PIECES[i];
+                BoardStatus[8 - 1, i].kind = DEFAULT_PIECES[i];
             }
 
         }

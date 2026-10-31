@@ -12,6 +12,7 @@ Raylib.InitWindow(width, height, "Ches - 2.5D Chess");
 Raylib.SetTargetFPS(60);
 
 Renderer render = new Renderer();
+//Camera2D camera2d = new Camera2D();
 Cursor3D cursor = new Cursor3D("Character", new Camera3D{
     Position = new Vector3(0f, 2f, 2f),
     Target = new Vector3(0f, 1f, 0f),
@@ -42,7 +43,12 @@ while (!Raylib.WindowShouldClose())
         render.DrawBoard();
         render.DrawBoardPieces();
         cursor.DrawCursor();
+        
+        
       render.EndRender3D();
+
+
+    render.DrawMousePos();
     Raylib.EndDrawing();
 }
 render.unload();

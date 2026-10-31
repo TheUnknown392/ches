@@ -8,6 +8,7 @@ namespace model
             this.color = color;
             this.model = model;
             this.kind = PieceKindEnum.King;
+            this.getBoundingBox(model);
         }
     }
 

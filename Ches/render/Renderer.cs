@@ -10,8 +10,11 @@ namespace render
         // At scale 1, each square len is 0.05f
         private static float BOARD_SCALE = 10f; // square len = 0.5f
 
+
         public Camera camera;
         private Board board;
+
+
         public Renderer()
         {
             board = new Board("Ches/assest/Chess/obj/Board.obj", BOARD_SCALE);
@@ -168,16 +171,45 @@ namespace render
             DrawPiece(piece_kind, color, new Vector2(x, y));
         }
         // todo: change so it's easier to add some kind of animation.
-        public void DrawBoardPieces(){
-            for (int x = 0; x < 8; x++){
-                for (int y = 0; y < 8; y++){
-                    Vector2 currentPos = new Vector2(x, y);
-                    if(GameMaster.BoardStatus.ContainsKey(currentPos)){
+        public void DrawBoardPieces()
+        {
+            // property of loops when rendering, inner loop = x and outer loop = y
+            for (int y = 0; y < 8; y++)
+            {
+                for (int x = 0; x < 8; x++)
+                {
+                    Vector2 currentPos = new Vector2(y, x); // normal non rendering pos
+                    if (GameMaster.BoardStatus.ContainsKey(currentPos))
+                    {
                         BoardPiece boardPiece;
                         GameMaster.BoardStatus.TryGetValue(currentPos, out boardPiece);
-                        DrawPiece(boardPiece.kind,boardPiece.color,new Vector2(y+1,x+1));
+                        DrawPiece(boardPiece.kind, boardPiece.color, new Vector2(x + 1, y + 1));
+
+
+                        if (Raylib.IsMouseButtonDown(MouseButton.Left))
+                        {
+                            Vector2 mousePosition = Raylib.GetMousePosition();
+                            Ray ray = Raylib.GetScreenToWorldRay(mousePosition, camera.getCamera());
+                            BoundingBox Modelbb = GameMaster.getPieceByPieceKind(boardPiece.kind, boardPiece.color).boundingBox;
+                            Vector3 renderPos = new Vector3(GameMaster.standardToRenderPosition(x+1, y + 1).X, 1f, GameMaster.standardToRenderPosition(x+1,y+1).Y);
+                            BoundingBox Renderbb = new BoundingBox(
+                                Modelbb.Min*GameMaster.scale + renderPos,
+                                Modelbb.Max*GameMaster.scale + renderPos
+                            );
+                            RayCollision collision =  Raylib.GetRayCollisionBox(ray, Renderbb);
+                            Raylib.DrawBoundingBox(Renderbb, Color.Red);
+                            if(collision.Hit){
+                                Console.WriteLine(currentPos);
+                            }
+                        }
                     }
                 }
+            }
+        }
+        public void DrawMousePos(){
+            if(Raylib.IsKeyDown(KeyboardKey.M)){
+                Vector2 mousePos = Raylib.GetMousePosition();
+                Raylib.DrawText(mousePos.ToString(), 10, 10, 10, Color.Red);
             }
         }
     }

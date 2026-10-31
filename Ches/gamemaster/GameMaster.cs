@@ -95,7 +95,7 @@ namespace gamemaster
             }
 
         }
-
+        // for standard displays, xy are swapped  forsome reason
         public static Vector2 standardToRenderPosition(Vector2 pos)
         {
             return new Vector2(

@@ -171,8 +171,12 @@ namespace render
         public void DrawBoardPieces(){
             for (int x = 0; x < 8; x++){
                 for (int y = 0; y < 8; y++){
-                    BoardPiece boardPiece = GameMaster.BoardStatus[x,y];
-                    DrawPiece(boardPiece.kind,boardPiece.color,y+1,x+1);
+                    Vector2 currentPos = new Vector2(x, y);
+                    if(GameMaster.BoardStatus.ContainsKey(currentPos)){
+                        BoardPiece boardPiece;
+                        GameMaster.BoardStatus.TryGetValue(currentPos, out boardPiece);
+                        DrawPiece(boardPiece.kind,boardPiece.color,new Vector2(y+1,x+1));
+                    }
                 }
             }
         }

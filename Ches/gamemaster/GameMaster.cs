@@ -7,7 +7,7 @@ namespace gamemaster
 
     public static class GameMaster
     {
-        public static BoardPiece[,] BoardStatus = new BoardPiece[8,8];
+        public static Dictionary<Vector2, BoardPiece> BoardStatus = new Dictionary<Vector2, BoardPiece>();
         public static PieceKindEnum[] DEFAULT_PIECES =  {
             PieceKindEnum.Rook,
             PieceKindEnum.Knight,
@@ -67,30 +67,31 @@ namespace gamemaster
             scale = scalef;
         }
         public static void initBoard(){
-
-            for (int row = 0; row < 8; row ++)
-            {
-                for (int col = 0; col < 8; col++){
-                    BoardStatus[row, col].kind = PieceKindEnum.UNKNOWN;
-                    BoardStatus[row, col].color = Piece_Color.UNKNOWN;
-                }
-            }
-
             for (int col = 0; col < 8; col++)
             {
-                BoardStatus[2 - 1, col].kind = our.pawn.kind;
-                BoardStatus[2 - 1, col].color = our.pawn.color;
-
-                BoardStatus[7 - 1, col].kind = opponent.pawn.kind;
-                BoardStatus[7 - 1, col].color = opponent.pawn.color;
+                BoardStatus.TryAdd(new Vector2(2-1,col),new BoardPiece
+                {
+                    kind = PieceKindEnum.Pawn,
+                    color = Piece_Color.White
+                });
+                BoardStatus.TryAdd(new Vector2(7-1,col),new BoardPiece
+                {
+                    kind = PieceKindEnum.Pawn,
+                    color = Piece_Color.Black
+                });
             }
             for (int i = 0; i < 8; i++){
-
-                BoardStatus[1 - 1, i].color = our.pawn.color;
-                BoardStatus[8 - 1, i].color = opponent.pawn.color;
-
-                BoardStatus[1 - 1, i].kind = DEFAULT_PIECES[i];
-                BoardStatus[8 - 1, i].kind = DEFAULT_PIECES[i];
+                BoardStatus.TryAdd(new Vector2(1-1,i),new BoardPiece
+                {
+                    kind = DEFAULT_PIECES[i],
+                    color = Piece_Color.White
+                });
+                
+                BoardStatus.TryAdd(new Vector2(8-1,i),new BoardPiece
+                {
+                    kind = DEFAULT_PIECES[i],
+                    color = Piece_Color.Black
+                });
             }
 
         }

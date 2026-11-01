@@ -43,12 +43,11 @@ while (!Raylib.WindowShouldClose())
         render.DrawBoard();
         render.DrawBoardPieces();
         cursor.DrawCursor();
-        
-        
-      render.EndRender3D();
+    Console.WriteLine($"Piece_kind: {GameMaster.ourSelectedBoardPiece.boardPiece.kind} Piece_standard_pos: {GameMaster.ourSelectedBoardPiece.standardPos} ");
+
+    render.EndRender3D();
 
 
-    render.DrawMousePos();
     Raylib.EndDrawing();
 }
 render.unload();

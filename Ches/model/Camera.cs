@@ -1,6 +1,6 @@
 using Raylib_cs;
 using System.Numerics;
-namespace render{
+namespace model{
     public class Camera{
         private Camera3D camera;
         private Vector3 camera_distance = new Vector3(0f, 6f, 2.5f);

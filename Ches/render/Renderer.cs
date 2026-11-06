@@ -23,7 +23,8 @@ namespace render
             board = new Board("Ches/assest/Chess/obj/Board.obj", BOARD_SCALE);
             GameMaster.initBoard();
             camera = new Camera();
-            // todo: put this globally maybe?
+            
+            // todo: put this globally
             this.renderHandler = new RenderHandler(this);
         }
         public void DrawBoard()
@@ -175,7 +176,8 @@ namespace render
         {
             DrawPiece(piece_kind, color, new Vector2(x, y));
         }
-        public void GetRendererInputs(){
+        // todo: after defining renderhandler globally, get inputs directly by RenderHandler to update selectedpiece
+        public void GetRendererInputs(){ 
             if(Raylib.IsMouseButtonPressed(MouseButton.Left)){
                 BoardPiece boardPiece = renderHandler.getBoardPieceByMouse();
                 if(boardPiece.kind != PieceKindEnum.UNKNOWN){

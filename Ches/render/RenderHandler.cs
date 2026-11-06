@@ -51,19 +51,24 @@ namespace render{
             );
         }
         
-        // public BoardPiece? getBoardPieceByMouse(){
-        //     Vector2 mousePosition = Raylib.GetMousePosition();
-        //     Ray ray = Raylib.GetScreenToWorldRay(mousePosition, renderer.camera.getCamera());
-        //     foreach(KeyValuePair<Vector2, BoardPiece> kv in GameMaster.BoardStatus){
-        //         if(kv.Value.boundingBox == null) continue;
+         public BoardPiece getBoardPieceByMouse(){
+             Vector2 mousePosition = Raylib.GetMousePosition();
+             Ray ray = Raylib.GetScreenToWorldRay(mousePosition, renderer.camera.getCamera());
+             foreach(KeyValuePair<Vector2, BoardPiece> kv in GameMaster.BoardStatus){
+                 if(kv.Value.boundingBox == null) continue;
                 
-        //         RayCollision collision = Raylib.GetRayCollisionBox(ray, (BoundingBox)kv.Value.boundingBox);
-        //         if(collision.Hit){
-        //             Console.WriteLine($"From getBoardPieceByMouse: {kv.Value}");
-        //             return kv.Value;
-        //         }
-        //     }
-        //     return null;
-        // }
+                 RayCollision collision = Raylib.GetRayCollisionBox(ray, (BoundingBox)kv.Value.boundingBox);
+                 if(collision.Hit){
+                     if(GameMaster.DEBUG)
+                        Console.WriteLine($"From getBoardPieceByMouse: {kv.Value.kind} {kv.Value.color}");
+                     return kv.Value;
+                 }
+             }
+             return new BoardPiece{
+                 kind = PieceKindEnum.UNKNOWN,
+                 color = Piece_Color.UNKNOWN,
+                 boundingBox = null
+             };
+         }
     }
 }

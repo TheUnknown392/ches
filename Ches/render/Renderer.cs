@@ -10,6 +10,7 @@ namespace render
         // At scale 1, each square len is 0.05f
         private static float BOARD_SCALE = 10f; // square len = 0.5f
 
+        
         private RenderHandler renderHandler;
 
 
@@ -22,6 +23,7 @@ namespace render
             board = new Board("Ches/assest/Chess/obj/Board.obj", BOARD_SCALE);
             GameMaster.initBoard();
             camera = new Camera();
+            // todo: put this globally maybe?
             this.renderHandler = new RenderHandler(this);
         }
         public void DrawBoard()
@@ -172,6 +174,15 @@ namespace render
         public void DrawPiece(PieceKindEnum piece_kind, Piece_Color color, int x, int y)
         {
             DrawPiece(piece_kind, color, new Vector2(x, y));
+        }
+        public void GetRendererInputs(){
+            if(Raylib.IsMouseButtonPressed(MouseButton.Left)){
+                BoardPiece boardPiece = renderHandler.getBoardPieceByMouse();
+                if(boardPiece.kind != PieceKindEnum.UNKNOWN){
+                    
+                }
+                
+            }
         }
         // todo: change so it's easier to add some kind of animation.
         public void DrawBoardPieces()

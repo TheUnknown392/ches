@@ -11,17 +11,17 @@ namespace gamemaster
         public const bool DEBUG = true;
         public static Dictionary<Vector2, BoardPiece> BoardStatus = new Dictionary<Vector2, BoardPiece>();
         public static PieceKindEnum[] DEFAULT_PIECES =  {
-        PieceKindEnum.Rook,
-        PieceKindEnum.Knight,
-        PieceKindEnum.Bishop,
-        PieceKindEnum.Queen,
-        PieceKindEnum.King,
-        PieceKindEnum.Bishop,
-        PieceKindEnum.Knight,
-        PieceKindEnum.Rook
-    };
+            PieceKindEnum.Rook,
+            PieceKindEnum.Knight,
+            PieceKindEnum.Bishop,
+            PieceKindEnum.Queen,
+            PieceKindEnum.King,
+            PieceKindEnum.Bishop,
+            PieceKindEnum.Knight,
+            PieceKindEnum.Rook
+        };
 
-
+        // todo: make different class to load through some json maybe? 
         private static void LoadOurPieces()
         {
             GameMaster.our.king = new King(Piece_Color.White, Raylib.LoadModel("Ches/assest/Chess/obj/White-King.obj"));
@@ -45,30 +45,21 @@ namespace gamemaster
             LoadOurPieces();
             LoadOpponentPieces();
             initBoard();
-            ourSelectedBoardPiece.boardPiece.color = Piece_Color.UNKNOWN;
-            ourSelectedBoardPiece.boardPiece.kind = PieceKindEnum.UNKNOWN;
-            ourSelectedBoardPiece.boardPiece.boundingBox = null;
-            ourSelectedBoardPiece.standardPos = new Vector2(-1f, -1f);
-            // default scale
-            scale = 10f;
         }
-        public struct Pieces
-        {
-            public Pawn pawn;
-            public King king;
-            public Queen queen;
-            public Bishop bishop;
-            public Knight knight;
-            public Rook rook;
-        }
-
         // todo: remove this
-        public static float scale;
+        public static float scale = 10f; 
 
         public static Pieces our;
         public static Pieces opponent;
-        
-        public static SelectedPiece ourSelectedBoardPiece;
+
+        public static SelectedPiece ourSelectedBoardPiece = new SelectedPiece
+        {
+            standardPos = new Vector2(-1f, -1f),
+            boardPiece = new BoardPiece{
+                color = Piece_Color.UNKNOWN,
+                kind = PieceKindEnum.UNKNOWN
+            }
+        };
 
         public static void setScale(float scalef)
         {
@@ -178,6 +169,7 @@ namespace gamemaster
                     }
                     break;
                 default:
+                    // todo: add fallback model of some kind
                     Console.WriteLine("Unreachable code in getPieceByPieceKind reached");
                     Environment.Exit(-1);
                     break;

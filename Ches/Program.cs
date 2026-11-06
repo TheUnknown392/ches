@@ -32,6 +32,7 @@ while (!Raylib.WindowShouldClose())
     if (Raylib.IsKeyDown(KeyboardKey.Q)) break;
 
     cursor.handleCursor();
+    render.GetRendererInputs();
 
     Raylib.BeginDrawing();
       Raylib.ClearBackground(Color.RayWhite);
@@ -42,9 +43,8 @@ while (!Raylib.WindowShouldClose())
         Raylib.DrawLine3D(Vector3.Zero, new Vector3(0f, 0f, 5f), Color.Green);
         render.DrawBoard();
         render.DrawBoardPieces();
+                
         cursor.DrawCursor();
-    Console.WriteLine($"Piece_kind: {GameMaster.ourSelectedBoardPiece.boardPiece.kind} Piece_standard_pos: {GameMaster.ourSelectedBoardPiece.standardPos} ");
-
     render.EndRender3D();
 
 

@@ -77,10 +77,11 @@ void setFlagOption(int argc,char *argv[]){
 }
 
 int main(int argc, char *argv[]){
-    const char *SAVED_DIR = nob_get_current_dir_temp();
     NOB_GO_REBUILD_URSELF(argc, argv);
     Nob_Cmd cmd = {0};
     nob_shift(argv,argc);
+    
+    const char *SAVED_DIR = nob_get_current_dir_temp();
 
     
     setFlagOption(argc,argv);
@@ -101,6 +102,5 @@ int main(int argc, char *argv[]){
             nob_log(ERROR,"Could not run CHES");
         }
     }
-    free((void *)SAVED_DIR);
     return 0;
 }

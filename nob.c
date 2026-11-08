@@ -77,6 +77,7 @@ void setFlagOption(int argc,char *argv[]){
 }
 
 int main(int argc, char *argv[]){
+    const char *SAVED_DIR = nob_get_current_dir_temp();
     NOB_GO_REBUILD_URSELF(argc, argv);
     Nob_Cmd cmd = {0};
     nob_shift(argv,argc);
@@ -91,6 +92,7 @@ int main(int argc, char *argv[]){
         if (!nob_cmd_run(&cmd)){
             nob_log(ERROR,"Could not run PROPOSAL");
         }
+        if(!nob_set_current_dir(SAVED_DIR)) return 1;
     }
     
     if(flag_option.ches){
@@ -99,6 +101,6 @@ int main(int argc, char *argv[]){
             nob_log(ERROR,"Could not run CHES");
         }
     }
-
+    free((void *)SAVED_DIR);
     return 0;
 }

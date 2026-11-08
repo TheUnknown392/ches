@@ -1,49 +1,49 @@
 using System.Numerics;
 using Raylib_cs;
-using render;
+using gamemaster;
+using model;
 namespace debug{
     public class Cursor3D{
-        private Renderer renderer;
+        private Camera cameras;
         public float cursor_speed;
         public Vector3 cursor_pos;
         public Vector3 cursor_dist;
         public float cursor_rad;
-        public Camera3D camera;
+        public Camera3D cursor_camera3d;
         public bool cursor_view;
         public string name;
 
         public Vector3 prev_cursor_pos;
 
-        public Cursor3D(string cursor_name, Camera3D camera, float cursor_rad,float cursor_speed, Renderer renderer){
-            this.renderer = renderer;
-            if(renderer == null){
-                Raylib.TraceLog(TraceLogLevel.Error, "No renderer found for Cursor3D");
-                Environment.Exit(-1);
-            }
+        public Cursor3D(string cursor_name, Camera3D cursor_camera3d, float cursor_rad,float cursor_speed, Camera cameras){
+            this.cameras = cameras;
             this.cursor_speed = cursor_speed;
             this.name = cursor_name;
             this.cursor_rad = cursor_rad;
-            this.camera = camera;
-            this.cursor_dist = camera.Position;
-            this.cursor_pos = camera.Target;
+            this.cursor_camera3d = cursor_camera3d;
+            this.cursor_dist = cursor_camera3d.Position;
+            this.cursor_pos = cursor_camera3d.Target;
             this.prev_cursor_pos = cursor_pos;
             this.cursor_view = false;
-            this.renderer.camera.addView(cursor_name,camera);
+            this.cameras.addView(this.name, this.cursor_camera3d);
         }
 
         public void DrawCursor()
         {
             if (cursor_view)
             {
-                this.camera.Target = cursor_pos;
-                this.camera.Position = cursor_pos + cursor_dist;
-                this.renderer.camera.setView(this.name);
-                this.renderer.camera.addView(this.name, this.camera);
-                if(cursor_pos != prev_cursor_pos){
-                    Console.WriteLine($"DrawCursor. cursor_pos: {cursor_pos}, Camera: {this.camera}");
+                this.cursor_camera3d.Target = cursor_pos;
+                this.cursor_camera3d.Position = cursor_pos + cursor_dist;
+                
+                this.cameras.addView(this.name, this.cursor_camera3d);
+                this.cameras.setView(this.name);
+                if(cursor_pos != prev_cursor_pos && GameMaster.DEBUG){
+                    Console.WriteLine($"DrawCursor. cursor_pos: {cursor_pos}, Cameras: {this.cursor_camera3d}");
                     prev_cursor_pos = cursor_pos;
                 }
                 Raylib.DrawSphere(cursor_pos, cursor_rad, Color.Pink);
+            }else{
+                this.cameras.setView("default");
             }
         }
 

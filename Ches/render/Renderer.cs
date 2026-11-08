@@ -18,14 +18,12 @@ namespace render
         private Board board;
 
 
-        public Renderer()
+        public Renderer(Camera camera, RenderHandler renderHandler)
         {
             board = new Board("Ches/assest/Chess/obj/Board.obj", BOARD_SCALE);
             GameMaster.initBoard();
-            camera = new Camera();
-            
-            // todo: put this globally
-            this.renderHandler = new RenderHandler(this);
+            this.renderHandler = renderHandler;
+            this.camera = camera;
         }
         public void DrawBoard()
         {

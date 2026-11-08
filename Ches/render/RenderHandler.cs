@@ -1,15 +1,15 @@
 using Raylib_cs;
 using System.Numerics;
 using gamemaster;
-
+using model;
 namespace render{
     public class RenderHandler{
         
-        private Renderer renderer;
+        private Camera camera;
 
         
-        public RenderHandler(Renderer renderer){
-            this.renderer = renderer;
+        public RenderHandler(Camera camera){
+            this.camera = camera;
         }
         
         public void DrawMousePos(){
@@ -22,7 +22,7 @@ namespace render{
         public RayCollision getPieceMouseCollision(Vector2 currentPiecePos){
             Vector2 mousePosition = Raylib.GetMousePosition();
             
-            Ray ray = Raylib.GetScreenToWorldRay(mousePosition, renderer.camera.getCamera());
+            Ray ray = Raylib.GetScreenToWorldRay(mousePosition, camera.getCamera());
 
             BoundingBox pieceBB = getPieceRenderBoundingBox(currentPiecePos);
             return Raylib.GetRayCollisionBox(ray,pieceBB);
@@ -53,7 +53,7 @@ namespace render{
         
          public BoardPiece getBoardPieceByMouse(){
              Vector2 mousePosition = Raylib.GetMousePosition();
-             Ray ray = Raylib.GetScreenToWorldRay(mousePosition, renderer.camera.getCamera());
+             Ray ray = Raylib.GetScreenToWorldRay(mousePosition, camera.getCamera());
              foreach(KeyValuePair<Vector2, BoardPiece> kv in GameMaster.BoardStatus){
                  if(kv.Value.boundingBox == null) continue;
                 

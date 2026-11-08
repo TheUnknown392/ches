@@ -39,7 +39,7 @@ namespace render{
         }
 
 
-        public RayCollision getPieceRenderMouseCollision(float x, float y){
+        public RayCollision getPieceMouseCollision(float x, float y){
             return getPieceMouseCollision(new Vector2(x,y));
         }
         

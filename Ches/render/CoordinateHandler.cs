@@ -30,7 +30,37 @@ namespace render
             return renderToStandardPosition(new Vector2(x, z));
         }
 
-        
 
+
+
+
+
+        public static Vector3 standardToRenderPosition(Vector3 pos)
+        {
+            return new Vector3(
+                (pos.X - 4.5f) / 2f,
+                pos.Y,
+                (4.5f - pos.Z) / 2f
+            );
+        }
+
+        public static Vector3 standardToRenderPosition(float x, float y, float z)
+        {
+            return standardToRenderPosition(new Vector3(x, y ,z));
+        }
+
+        public static Vector3 renderToStandardPosition(Vector3 pos)
+        {
+            return new Vector3(
+                pos.X * 2f + 4.5f,
+                pos.Y,
+                4.5f - pos.Z * 2f
+            );
+        }
+
+        public static Vector3 renderToStandardPosition(float x, float y, float z)
+        {
+            return renderToStandardPosition(new Vector3(x, y, z));
+        }
     }
 }

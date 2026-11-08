@@ -28,6 +28,17 @@ namespace render{
             return Raylib.GetRayCollisionBox(ray,pieceBB);
         }
         
+        public RayCollision getPieceMouseCollision(Vector2 currentPiecePos, BoardPiece boardPiece)
+        {
+            Vector2 mousePosition = Raylib.GetMousePosition();
+
+            Ray ray = Raylib.GetScreenToWorldRay(mousePosition, camera.getCamera());
+
+            BoundingBox pieceBB = getPieceRenderBoundingBox(currentPiecePos);
+            return Raylib.GetRayCollisionBox(ray, pieceBB);
+        }
+
+
         public RayCollision getPieceRenderMouseCollision(float x, float y){
             return getPieceMouseCollision(new Vector2(x,y));
         }
@@ -35,6 +46,10 @@ namespace render{
         public BoundingBox getPieceRenderBoundingBox(Vector2 currentPiecePos){
             BoardPiece boardPiece;
             GameMaster.BoardStatus.TryGetValue(currentPiecePos, out boardPiece);
+            return GetPieceRenderingBoundingBox(boardPiece.kind, boardPiece.color, currentPiecePos);
+        }
+        
+        public BoundingBox getPieceRenderBoundingBox(Vector2 currentPiecePos, BoardPiece boardPiece){
             return GetPieceRenderingBoundingBox(boardPiece.kind, boardPiece.color, currentPiecePos);
         }
         
@@ -59,8 +74,6 @@ namespace render{
                 
                  RayCollision collision = Raylib.GetRayCollisionBox(ray, (BoundingBox)kv.Value.boundingBox);
                  if(collision.Hit){
-                     if(GameMaster.DEBUG)
-                        Console.WriteLine($"From getBoardPieceByMouse: {kv.Value.kind} {kv.Value.color}");
                      return kv.Value;
                  }
              }
@@ -70,5 +83,16 @@ namespace render{
                  boundingBox = null
              };
          }
+         // todo: after defining renderhandler globally, get inputs directly by RenderHandler to update selectedpiece
+         public void GetRendererInputs(){ 
+             if(Raylib.IsMouseButtonPressed(MouseButton.Left)){
+                 BoardPiece boardPiece = getBoardPieceByMouse();
+                 if(boardPiece.kind != PieceKindEnum.UNKNOWN){
+                     //GameMaster.ourSelectedBoardPiece.boardPiece.
+                 }
+                
+             }
+         }
+
     }
 }

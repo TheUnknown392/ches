@@ -12,8 +12,7 @@ namespace render
 
         
         private RenderHandler renderHandler;
-
-
+        
         public Camera camera;
         private Board board;
 
@@ -174,16 +173,6 @@ namespace render
         {
             DrawPiece(piece_kind, color, new Vector2(x, y));
         }
-        // todo: after defining renderhandler globally, get inputs directly by RenderHandler to update selectedpiece
-        public void GetRendererInputs(){ 
-            if(Raylib.IsMouseButtonPressed(MouseButton.Left)){
-                BoardPiece boardPiece = renderHandler.getBoardPieceByMouse();
-                if(boardPiece.kind != PieceKindEnum.UNKNOWN){
-                    
-                }
-                
-            }
-        }
         // todo: change so it's easier to add some kind of animation.
         public void DrawBoardPieces()
         {
@@ -198,15 +187,18 @@ namespace render
                         GameMaster.BoardStatus.TryGetValue(currentPos, out boardPiece);
                         DrawPiece(boardPiece.kind, boardPiece.color, new Vector2(x + 1, y + 1));
                         if(Raylib.IsMouseButtonPressed(MouseButton.Left)){
-                            RayCollision collision = renderHandler.getPieceMouseCollision(currentPos);
-                            if(collision.Hit){
-                                if(GameMaster.DEBUG){
-                                    Raylib.DrawBoundingBox(renderHandler.getPieceRenderBoundingBox(currentPos),Color.Red);
-                                }
+                            if(renderHandler.getBoardPieceByMouse() == boardPiece){
+                                Console.WriteLine($"{boardPiece.kind} {boardPiece.color}");
                                 GameMaster.ourSelectedBoardPiece.boardPiece = boardPiece;
-                                GameMaster.ourSelectedBoardPiece.standardPos = currentPos;
-                                
+                                GameMaster.ourSelectedBoardPiece.standardPos = currentPos;            
                             }
+                        }else if(Raylib.IsMouseButtonDown(MouseButton.Left)){
+                            // if(renderHandler.getBoardPieceByMouse() == boardPiece){
+                            //     Console.WriteLine($"{boardPiece.kind} {boardPiece.color}");
+                            //     GameMaster.ourSelectedBoardPiece.boardPiece = boardPiece;
+                            //     GameMaster.ourSelectedBoardPiece.standardPos = currentPos;            
+                            // }
+
                         }
                     }
                 }

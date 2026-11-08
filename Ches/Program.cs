@@ -34,7 +34,6 @@ while (!Raylib.WindowShouldClose())
     if (Raylib.IsKeyDown(KeyboardKey.Q)) break;
 
     cursor.handleCursor();
-    renderer.GetRendererInputs();
 
     Raylib.BeginDrawing();
       Raylib.ClearBackground(Color.RayWhite);

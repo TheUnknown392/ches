@@ -6,8 +6,8 @@
 
 ## Building project
 ```bash
-    $ches> gcc ./nob.c -o nob
-    $ches> ./nob // verb "ches" for compiling main program, "proposal" for compiling proposal
+gcc ./nob.c -o nob
+./nob
 ```
 ## Resources used
 - [onlinegantt.com](https://www.onlinegantt.com/#/gantt) for Gantt Chart

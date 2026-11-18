@@ -13,6 +13,9 @@ Ches/[Oo]bj/
 *.sln.docstates
 
 tags
+TAGS
 
 *raylib_log.txt
 *.log
+
+!/home/theunknown/Git/ches/Ches/assest/Chess

@@ -56,10 +56,30 @@ namespace gamemaster
         {
             standardPos = new Vector2(-1f, -1f),
             boardPiece = new BoardPiece{
-                color = Piece_Color.UNKNOWN,
-                kind = PieceKindEnum.UNKNOWN
+                color = Piece_Color.None,
+                kind = PieceKindEnum.None
             }
         };
+
+        public static void setSelectedPiece(BoardPiece boardPiece , Vector2 standardPos)
+        {
+            ourSelectedBoardPiece.boardPiece = boardPiece;
+            ourSelectedBoardPiece.standardPos = standardPos;
+        }
+        public static void unSelectPiece()
+        {
+            ourSelectedBoardPiece.boardPiece = BoardPiece.None();
+            ourSelectedBoardPiece.standardPos = Vector2.NegativeInfinity;
+        }
+        public static BoardPiece getOurSelectedBoardPiece(){
+            return ourSelectedBoardPiece.boardPiece;
+        }
+        public static Vector2 getOurSelectedBoardPos(){
+            return ourSelectedBoardPiece.standardPos;
+        }
+        public static bool isOurPieceSelected(){
+            return ourSelectedBoardPiece.boardPiece != BoardPiece.None();
+        }
 
         public static void setScale(float scalef)
         {

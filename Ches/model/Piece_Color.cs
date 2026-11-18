@@ -2,6 +2,7 @@ namespace gamemaster{
     public enum Piece_Color{
         Black,
         White,
+        None,
         UNKNOWN
     }
 }

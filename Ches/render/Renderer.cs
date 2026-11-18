@@ -16,7 +16,7 @@ namespace render
         public Camera camera;
         private Board board;
 
-        private bool holding_piece = false;
+        private bool isPiece_Held = false;
 
 
         public Renderer(Camera camera, RenderHandler renderHandler)
@@ -178,42 +178,31 @@ namespace render
         // todo: change so it's easier to add some kind of animation.
         public void DrawBoardPieces()
         {
+            bool prev_isPiece_Held = this.isPiece_Held;
             for (int y = 0; y < 8; y++)
             {
                 for (int x = 0; x < 8; x++)
                 {
-                    Vector2 currentPos = new Vector2(x,y); // normal non rendering pos
+                    Vector2 currentPos = new Vector2(x, y); // normal non rendering pos
                     if (GameMaster.BoardStatus.ContainsKey(currentPos))
                     {
                         BoardPiece boardPiece;
                         GameMaster.BoardStatus.TryGetValue(currentPos, out boardPiece);
-
+                        
+                        renderHandler.RendererInput(boardPiece, currentPos, prev_isPiece_Held, out this.isPiece_Held);
                         Vector3 piece_pos = new Vector3(x + 1, 1f, y + 1f);
-                        if(holding_piece  && GameMaster.ourSelectedBoardPiece.standardPos.Equals(new Vector2(x,y))){
+                        if (isPiece_Held && GameMaster.ourSelectedBoardPiece.standardPos.Equals(new Vector2(x, y)))
+                        {
                             piece_pos.Y += 0.1f;
                             // todo: get collision with mouse ray + boardbox if possible and edit piece_pos accordingly to its above collided location for piece movement animation thingie
                         }
                         DrawPiece(boardPiece.kind, boardPiece.color, piece_pos);
-                        
-                        // todo: improve this
-                        if(Raylib.IsMouseButtonPressed(MouseButton.Left)){
-                            if(renderHandler.getBoardPieceByMouse() == boardPiece){
-                                Console.WriteLine($"{boardPiece.kind} {boardPiece.color}");
-                                GameMaster.ourSelectedBoardPiece.boardPiece = boardPiece;
-                                GameMaster.ourSelectedBoardPiece.standardPos = currentPos;            
-                            }
-                        }else if(Raylib.IsMouseButtonDown(MouseButton.Left)){
-                            if(renderHandler.getBoardPieceByMouse().boundingBox!=null){
-                                this.holding_piece = true;                                
-                            }
-                        }
 
-                        if(Raylib.IsMouseButtonReleased(MouseButton.Left)){
-                            this.holding_piece = false;
-                        }
+
                     }
                 }
             }
         }
+        
     }
 }

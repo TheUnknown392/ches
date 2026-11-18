@@ -6,6 +6,7 @@ namespace gamemaster{
         Knight,
         Rook,
         Pawn,
+        None,
         UNKNOWN
     }
 }

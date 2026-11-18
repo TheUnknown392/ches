@@ -16,11 +16,13 @@
 typedef struct{
     bool proposal;
     bool ches;
+    bool all;
 }Flag_option;
 
 Flag_option flag_option = {
     .proposal = false,
-    .ches = false
+    .ches = false,
+    .all = true
 };
 
 typedef struct{
@@ -65,6 +67,11 @@ Flag getFlag(int argc, char* argv[]){
 
 void setFlagOption(int argc,char *argv[]){
     Flag flag = getFlag(argc, argv);
+    // if flag is provided, don't run all by default
+    if(flag.flag_count>0){
+        flag_option.all = false;
+    }
+    
     for(int i=0; i<flag.flag_count; i++){
         if(!strcmp(flag.flags[i],"ches")){
             flag_option.ches = true;
@@ -76,31 +83,50 @@ void setFlagOption(int argc,char *argv[]){
     }    
 }
 
+int run_proposal(Nob_Cmd *cmd, const char* SAVED_DIR){
+    if(!nob_set_current_dir(PROPOSAL_SRC)) return 0;
+    if(!nob_mkdir_if_not_exists(PROPOSAL_BLD)) return 0;
+    nob_cmd_append(cmd, "latexmk", "-xelatex", "-outdir="PROPOSAL_BLD, "latex.tex");
+    if (!nob_cmd_run(cmd)){
+        nob_log(ERROR,"Could not run PROPOSAL");
+        return 0;
+    }
+    if(!nob_set_current_dir(SAVED_DIR)) return 0;
+    return 1;
+}
+
+int run_ches(Nob_Cmd *cmd){
+    nob_cmd_append(cmd, "dotnet", "run", "--project", CHES_PROJECT);
+    if (!nob_cmd_run(cmd)){
+        nob_log(ERROR,"Could not run CHES");
+        return 0;
+    }
+    return 1;
+}
+
 int main(int argc, char *argv[]){
     NOB_GO_REBUILD_URSELF(argc, argv);
     Nob_Cmd cmd = {0};
     nob_shift(argv,argc);
-    
-    const char *SAVED_DIR = nob_get_current_dir_temp();
 
+    const char *SAVED_DIR = nob_get_current_dir_temp();
     
     setFlagOption(argc,argv);
-        
+    
+    if(flag_option.all){
+        if(!run_proposal(&cmd, SAVED_DIR)) return 1;
+        if(!run_ches(&cmd)) return 1;
+        return 0;
+    }
+    
     if(flag_option.proposal){
-        if(!nob_set_current_dir(PROPOSAL_SRC)) return 1;
-        if(!nob_mkdir_if_not_exists(PROPOSAL_BLD)) return 1;
-        nob_cmd_append(&cmd, "latexmk", "-xelatex", "-outdir="PROPOSAL_BLD, "latex.tex");
-        if (!nob_cmd_run(&cmd)){
-            nob_log(ERROR,"Could not run PROPOSAL");
-        }
-        if(!nob_set_current_dir(SAVED_DIR)) return 1;
+        if(!run_proposal(&cmd, SAVED_DIR)) return 1;
     }
     
     if(flag_option.ches){
-        nob_cmd_append(&cmd, "dotnet", "run", "--project", CHES_PROJECT);
-        if (!nob_cmd_run(&cmd)){
-            nob_log(ERROR,"Could not run CHES");
-        }
+        if(!run_ches(&cmd)) return 1; 
     }
+
+    
     return 0;
 }

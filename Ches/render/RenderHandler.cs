@@ -3,6 +3,13 @@ using System.Numerics;
 using gamemaster;
 using model;
 namespace render{
+    struct PieceMouseSelectMode
+    {
+        // todo: complete this. enabling users to select pieces by clicking and holding on the board 
+        bool press;
+        bool drag;
+    }
+    
     public class RenderHandler{
         
         private Camera camera;
@@ -77,22 +84,39 @@ namespace render{
                      return kv.Value;
                  }
              }
-             return new BoardPiece{
-                 kind = PieceKindEnum.UNKNOWN,
-                 color = Piece_Color.UNKNOWN,
-                 boundingBox = null
-             };
-         }
-         // todo: after defining renderhandler globally, get inputs directly by RenderHandler to update selectedpiece
-         public void GetRendererInputs(){ 
-             if(Raylib.IsMouseButtonPressed(MouseButton.Left)){
-                 BoardPiece boardPiece = getBoardPieceByMouse();
-                 if(boardPiece.kind != PieceKindEnum.UNKNOWN){
-                     //GameMaster.ourSelectedBoardPiece.boardPiece.
-                 }
-                
-             }
-         }
+            return BoardPiece.None();
+        }
+
+        public void RendererInput(BoardPiece boardPiece, Vector2 currentPos, bool prev_isPiece_Held, out bool isPiece_Held)
+        {
+            isPiece_Held = prev_isPiece_Held;
+            if(GameMaster.isOurPieceSelected() && Raylib.IsMouseButtonDown(MouseButton.Left)) return;
+            BoardPiece mouse_selected_boardPiece = getBoardPieceByMouse();
+            if(Raylib.IsMouseButtonPressed(MouseButton.Left)){
+                if (mouse_selected_boardPiece == boardPiece)
+                {
+                    GameMaster.setSelectedPiece(boardPiece, currentPos);
+                    Console.WriteLine($"Selected: {boardPiece.kind} {boardPiece.color} {currentPos}");
+                    isPiece_Held = true;
+                }
+                return;
+            }
+            if (Raylib.IsMouseButtonDown(MouseButton.Left))
+            {
+                if (mouse_selected_boardPiece == boardPiece)
+                {
+                    GameMaster.setSelectedPiece(boardPiece, currentPos);
+                    Console.WriteLine($"Selected: {boardPiece.kind} {boardPiece.color} {currentPos}");
+                    isPiece_Held = true;
+                }
+            }
+            if(Raylib.IsMouseButtonReleased(MouseButton.Left)){
+                GameMaster.unSelectPiece();
+                Console.WriteLine($"unselected");
+                isPiece_Held = false;
+
+            }
+        }         
 
     }
 }

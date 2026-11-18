@@ -3,18 +3,13 @@ using System.Numerics;
 using gamemaster;
 using model;
 namespace render{
-    struct PieceMouseSelectMode
-    {
-        // todo: complete this. enabling users to select pieces by clicking and holding on the board 
-        bool press;
-        bool drag;
-    }
-    
+
+
     public class RenderHandler{
         
         private Camera camera;
 
-        
+
         public RenderHandler(Camera camera){
             this.camera = camera;
         }
@@ -87,35 +82,58 @@ namespace render{
             return BoardPiece.None();
         }
 
-        public void RendererInput(BoardPiece boardPiece, Vector2 currentPos, bool prev_isPiece_Held, out bool isPiece_Held)
+        private double mouse_hold_time;
+        private bool clicked;
+        // returns clicked status
+        public bool RendererInput(BoardPiece boardPiece, Vector2 currentPos)
         {
-            isPiece_Held = prev_isPiece_Held;
-            if(GameMaster.isOurPieceSelected() && Raylib.IsMouseButtonDown(MouseButton.Left)) return;
-            BoardPiece mouse_selected_boardPiece = getBoardPieceByMouse();
-            if(Raylib.IsMouseButtonPressed(MouseButton.Left)){
-                if (mouse_selected_boardPiece == boardPiece)
-                {
-                    GameMaster.setSelectedPiece(boardPiece, currentPos);
-                    Console.WriteLine($"Selected: {boardPiece.kind} {boardPiece.color} {currentPos}");
-                    isPiece_Held = true;
-                }
-                return;
-            }
-            if (Raylib.IsMouseButtonDown(MouseButton.Left))
-            {
-                if (mouse_selected_boardPiece == boardPiece)
-                {
-                    GameMaster.setSelectedPiece(boardPiece, currentPos);
-                    Console.WriteLine($"Selected: {boardPiece.kind} {boardPiece.color} {currentPos}");
-                    isPiece_Held = true;
-                }
-            }
-            if(Raylib.IsMouseButtonReleased(MouseButton.Left)){
+            if(boardPiece.color == Piece_Color.Black) return false;
+            
+            // if any piece is selected
+            bool isSelected = false;
+            
+            // being hold and mouse button still being hold and some piece is selected
+            if(!clicked && Raylib.IsMouseButtonDown(MouseButton.Left) && GameMaster.isOurPieceSelected()) return false;
+            // being hold and mouse button is not held anymore and some piece is selected
+            if(!clicked && !Raylib.IsMouseButtonDown(MouseButton.Left) && GameMaster.isOurPieceSelected()){
+                Console.WriteLine("Unselected after holding");
                 GameMaster.unSelectPiece();
-                Console.WriteLine($"unselected");
-                isPiece_Held = false;
-
+                isSelected = false;
+                mouse_hold_time = 0f;
             }
+            
+            if(getBoardPieceByMouse() == boardPiece){
+                
+                if(Raylib.IsMouseButtonDown(MouseButton.Left)){
+                    isSelected = true;
+                    mouse_hold_time += Raylib.GetFrameTime();
+                }
+                if(Raylib.IsMouseButtonReleased(MouseButton.Left)){
+                    Console.WriteLine($"{mouse_hold_time}");
+                    isSelected = false;
+                    mouse_hold_time = 0f;
+                }
+            }else{
+                if(Raylib.IsMouseButtonPressed(MouseButton.Left)){
+                    GameMaster.unSelectPiece();
+                    Console.WriteLine("Unselected after clicking");
+                }
+            }
+
+            if(mouse_hold_time <= 0.13) {
+                clicked = true; 
+            }
+
+            if (mouse_hold_time > 0.13){
+                clicked = false;
+            }
+
+            if(isSelected){
+                GameMaster.setSelectedPiece(boardPiece, currentPos);
+                
+                Console.WriteLine($"Selected: {boardPiece.kind} {boardPiece.color} {currentPos}");
+            }
+            return clicked;
         }         
 
     }

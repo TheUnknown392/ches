@@ -78,7 +78,7 @@ namespace gamemaster
             return ourSelectedBoardPiece.standardPos;
         }
         public static bool isOurPieceSelected(){
-            return ourSelectedBoardPiece.boardPiece != BoardPiece.None();
+            return !(ourSelectedBoardPiece.boardPiece == BoardPiece.None() && ourSelectedBoardPiece.standardPos == Vector2.NegativeInfinity);
         }
 
         public static void setScale(float scalef)

@@ -16,9 +16,6 @@ namespace render
         public Camera camera;
         private Board board;
 
-        private bool isPiece_Held = false;
-
-
         public Renderer(Camera camera, RenderHandler renderHandler)
         {
             board = new Board("Ches/assest/Chess/obj/Board.obj", BOARD_SCALE);
@@ -175,10 +172,10 @@ namespace render
         {
             DrawPiece(piece_kind, color, new Vector3(x, 1f, y));
         }
+        private bool clicked;
         // todo: change so it's easier to add some kind of animation.
         public void DrawBoardPieces()
         {
-            bool prev_isPiece_Held = this.isPiece_Held;
             for (int y = 0; y < 8; y++)
             {
                 for (int x = 0; x < 8; x++)
@@ -189,14 +186,23 @@ namespace render
                         BoardPiece boardPiece;
                         GameMaster.BoardStatus.TryGetValue(currentPos, out boardPiece);
                         
-                        renderHandler.RendererInput(boardPiece, currentPos, prev_isPiece_Held, out this.isPiece_Held);
+
+                        // clicked false means hold
+                        clicked = renderHandler.RendererInput(boardPiece, currentPos);
                         Vector3 piece_pos = new Vector3(x + 1, 1f, y + 1f);
-                        if (isPiece_Held && GameMaster.ourSelectedBoardPiece.standardPos.Equals(new Vector2(x, y)))
-                        {
-                            piece_pos.Y += 0.1f;
-                            // todo: get collision with mouse ray + boardbox if possible and edit piece_pos accordingly to its above collided location for piece movement animation thingie
+                        if(GameMaster.getOurSelectedBoardPos().Equals(new Vector2(x, y)) && GameMaster.isOurPieceSelected()){
+                            if(clicked){
+                                // todo: make this better
+                                Raylib.DrawBoundingBox(renderHandler.getPieceRenderBoundingBox(currentPos),Color.Red);
+                            }
+                            if (!clicked){
+                                piece_pos.Y += 0.1f;
+                                // todo: get collision with mouse ray + boardbox if possible and edit piece_pos accordingly to its above collided location for piece movement animation thingie
+                            }                            
                         }
+
                         DrawPiece(boardPiece.kind, boardPiece.color, piece_pos);
+                        
 
 
                     }
